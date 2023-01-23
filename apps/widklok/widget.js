@@ -7,4 +7,8 @@
     g.drawString(timeStr[1], this.x+2, this.y+14, true);
   }
   WIDGETS["widklok"] = { area:"tr", width:16, draw: draw };
+
+  setInterval(function() {
+    WIDGETS["widklok"].draw(WIDGETS["widklok"]);
+  }, 20000);
 })();
