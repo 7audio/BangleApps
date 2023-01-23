@@ -8,6 +8,6 @@
   "tags": "widget,address,mac",
   "supports": ["BANGLEJS","BANGLEJS2"],
   "storage": [
-    {"name":"widid.wid.js","url":"widget.js"}
+    {"name":"widklok.wid.js","url":"widget.js"}
   ]
 }

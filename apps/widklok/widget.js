@@ -6,5 +6,5 @@
     g.drawString(timeStr[0], this.x+2, this.y+4, true);
     g.drawString(timeStr[1], this.x+2, this.y+14, true);
   }
-  WIDGETS["widid"] = { area:"tr", width:16, draw: draw };
+  WIDGETS["widklok"] = { area:"tr", width:16, draw: draw };
 })();
