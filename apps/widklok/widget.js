@@ -4,10 +4,9 @@ WIDGETS["widklok"] = { area:"tr", width:16, draw: function() {
   g.reset().setColor(g.theme.dark ? "#0ff" : "#00f").setFont("6x8", 1);
   g.drawString(timeStr[0], this.x+2, this.y+4, true);
   g.drawString(timeStr[1], this.x+2, this.y+14, true);
+  if (this.drawTimeout) clearTimeout(this.drawTimeout);
+  this.drawTimeout = setTimeout(()=>{
+    this.drawTimeout = undefined;
+    this.draw();
+  }, 60000 - (Date.now() % 60000));
 } };
-
-if (this.klokDroTimeout) clearTimeout(this.klokDroTimeout);
-this.klokDroTimeout = setTimeout(()=>{
-  this.klokDroTimeout = undefined;
-  this.draw();
-}, 60000 - (Date.now() % 60000));
