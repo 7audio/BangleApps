@@ -17,16 +17,12 @@ function showWelcomeMessage() {
   g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6);
   g.setFontAlign(0, 0).setFont("6x8");
   Bangle.http("https://api.waqi.info/feed/Bangkok/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3").then(data => {
-    // var kek = JSON.stringify(Object.keys(data));
-    // var kek2 = JSON.stringify(data);
     var data = JSON.parse(data.resp);
     g.setFont('12x20').setFontAlign(0, 0);
     g.drawString(data.data.aqi, 44, 70);
-    // g.drawString('kek2', 44, 88);
   }).catch((err) => {
     g.drawString('err', 44, 80);
   });
-  // setTimeout(function(){ g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6); }, 8000);
 }
 
 // time
