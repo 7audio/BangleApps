@@ -18,32 +18,6 @@ var timervalue = 0;
 var istimeron = false;
 var timertick;
 
-Bangle.on('touch',(touchside, touchdata)=>{
-  if (touchside == 1) {
-    Bangle.buzz(30);
-    var changevalue = 0;
-    if(touchdata.y > 88) {
-      changevalue += 60*5;
-    } else {
-      changevalue += 60*1;
-    }
-    if (timervalue < changevalue) { timervalue = 1 ; }
-    else { timervalue -= changevalue; }
-  }
-  else if (touchside == 2) {
-    Bangle.buzz(30);
-    if (!istimeron) {
-      istimeron = true;
-      timertick = setInterval(countDown, 1000);
-    }
-    if(touchdata.y > 88) {
-      timervalue += 60*10;
-    } else {
-      timervalue += 60*1;
-    }
-  }
-});
-
 function timeToString(duration) {
     var hrs = ~~(duration / 3600);
     var mins = ~~((duration % 3600) / 60);
@@ -55,29 +29,6 @@ function timeToString(duration) {
     ret += "" + mins + ":" + (secs < 10 ? "0" : "");
     ret += "" + secs;
     return ret;
-}
-
-function countDown() {
-  timervalue--;
-
-  g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6);
-
-  g.setFontAlign(0, -1, 0);
-  g.setFont("6x8").drawString("Timer", 44, g.getHeight()/2-20);
-  g.setFont("Michroma16").drawString(timeToString(timervalue), 44, g.getHeight()/2-10);
-
-  if (timervalue <= 0) {
-    istimeron = false;
-    clearInterval(timertick);
-
-    Bangle.buzz().then(()=>{
-      return new Promise(resolve=>setTimeout(resolve, 500));
-    }).then(()=>{
-      return Bangle.buzz(1000);
-    });
-  }
-  else
-    if ((timervalue <= 30) && (timervalue % 10 == 0)) { Bangle.buzz(); }
 }
 
 function showWelcomeMessage() {
