@@ -16,9 +16,16 @@ g.setFontCustom(atob("AAAAGAAYAAAAGAB4A/APwD4AeADgAAAAAAA/8H/4YBjAGMAcwBzAHMAcwB
 function showWelcomeMessage() {
   g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6);
   g.setFontAlign(0, 0).setFont("6x8");
-  g.drawString("Tap right to", 44, 80);
-  g.drawString("start timer", 44, 88);
-  setTimeout(function(){ g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6); }, 8000);
+  Bangle.http("https://pur3.co.uk/hello.txt").then(data => {
+    var kek = JSON.stringify(Object.keys(data));
+    var kek2 = JSON.stringify(data);
+    // g.setFont('12x20').setFontAlign(0, 0);
+    g.drawString(kek, 44, 80);
+    g.drawString(kek2, 44, 88);
+  }).catch((err) => {
+    g.drawString('err', 44, 80);
+  });
+  // setTimeout(function(){ g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6); }, 8000);
 }
 
 // time
