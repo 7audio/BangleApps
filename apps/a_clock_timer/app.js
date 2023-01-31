@@ -19,7 +19,7 @@ function showWelcomeMessage() {
   Bangle.http("https://api.waqi.info/feed/Bangkok/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3").then(data => {
     var data = JSON.parse(data.resp);
     g.setFont('12x20').setFontAlign(0, 0);
-    g.drawString(data.data.aqi, 44, 70);
+    g.drawString(`AQI: ${data.data.aqi}`, 44, 70);
   }).catch((err) => {
     g.drawString('err', 44, 80);
   });
