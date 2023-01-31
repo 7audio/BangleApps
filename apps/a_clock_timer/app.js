@@ -20,9 +20,9 @@ function showWelcomeMessage() {
     // var kek = JSON.stringify(Object.keys(data));
     // var kek2 = JSON.stringify(data);
     var data = JSON.parse(data.resp);
-    // g.setFont('12x20').setFontAlign(0, 0);
-    g.drawString(data.data.aqi, 44, 80);
-    g.drawString('kek2', 44, 88);
+    g.setFont('12x20').setFontAlign(0, 0);
+    g.drawString(data.data.aqi, 44, 70);
+    // g.drawString('kek2', 44, 88);
   }).catch((err) => {
     g.drawString('err', 44, 80);
   });
