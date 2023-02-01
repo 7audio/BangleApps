@@ -40,9 +40,10 @@ function showWeather() {
   Bangle.http("https://api.open-meteo.com/v1/forecast?latitude=13.75&longitude=100.50&current_weather=true").then(data => {
     var data = JSON.parse(data.resp);
     g.setFont('6x8').setFontAlign(0, 0);
-    g.drawString(data.current_weather.temperature, 44, 100);
+    g.drawString(`${data.current_weather.temperature}°C`, 44, 90);
+    g.drawString(`wind: ${data.current_weather.windspeed} m/s, ${data.current_weather.winddirection}°`, 44, 100);
   }).catch((err) => {
-    g.drawString(err, 44, 105);
+    g.drawString(err, 44, 95);
   });
 }
 
