@@ -41,7 +41,7 @@ function showWeather() {
     var data = JSON.parse(data.resp);
     g.setFont('6x8').setFontAlign(0, 0);
     g.drawString(`${data.current_weather.temperature}°C`, 44, 90);
-    g.drawString(`➣ ${data.current_weather.windspeed} m/s, ${data.current_weather.winddirection}°`, 44, 100);
+    g.drawString(`${data.current_weather.windspeed} m/s, ${data.current_weather.winddirection}°`, 44, 100);
   }).catch((err) => {
     g.drawString(err, 44, 95);
   });
