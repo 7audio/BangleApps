@@ -17,22 +17,22 @@ function showWelcomeMessage() {
   g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6);
   g.setFontAlign(0, 0).setFont("6x8");
   Bangle.http("https://api.waqi.info/feed/Bangkok/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3").then(data => {
-    var aqiStatuses = `0-50	Good
+    var aqiStatuses = `0-50\tGood
 51-100\tModerate
-101-150\tUnhealthy for Sensitive Groups
+101-150\tUnhealthy for Sensitive
 151-200\tUnhealthy
 201-300\tVery Unhealthy
 300-999999\tHazardous`;
     var readableStatus = aqiStatuses.split("\n").find(statusLine => {
       var aqiRange = statusLine.split("\t")[0].split("-");
       return data.data.aqi >= aqiRange[0] && data.data.aqi <= aqiRange[1];
-    }) || '0\tUnknown';
+    }) || "0\tUnknown";
     var data = JSON.parse(data.resp);
     g.setFont('6x8').setFontAlign(0, 0);
     g.drawString(readableStatus.split("\t")[1], 44, 80);
     g.drawString(`PM2.5: ${data.data.iaqi.pm25.v}`, 44, 70);
   }).catch((err) => {
-    g.drawString('err', 44, 80);
+    g.drawString(err, 44, 80);
   });
 }
 
