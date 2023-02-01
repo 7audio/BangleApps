@@ -69,6 +69,7 @@ function queueNextDraw() {
 }
 
 function draw() {
+  g.reset().clearRect(0,24,g.getWidth(),g.getHeight()-IMAGEHEIGHT);
   var locale = require("locale");
 
   var date = new Date();
