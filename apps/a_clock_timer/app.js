@@ -28,10 +28,10 @@ function showWelcomeMessage() {
       return data.data.aqi >= aqiRange[0] && data.data.aqi <= aqiRange[1];
     }) || "0\tUnknown";
     g.setFont('6x8').setFontAlign(0, 0);
-    g.drawString(readableStatus.split("\t")[1], 44, 80);
-    g.drawString(`PM2.5: ${data.data.iaqi.pm25.v}`, 44, 70);
+    g.drawString(readableStatus.split("\t")[1], 88, 110);
+    g.drawString(`PM2.5: ${data.data.iaqi.pm25.v}`, 88, 100);
   }).catch((err) => {
-    g.drawString(err, 44, 75);
+    g.drawString(err, 88, 105);
   });
 }
 
@@ -39,10 +39,10 @@ function showWeather() {
   Bangle.http("https://api.open-meteo.com/v1/forecast?latitude=13.75&longitude=100.50&current_weather=true").then(data => {
     var data = JSON.parse(data.resp);
     g.setFont('6x8').setFontAlign(0, 0);
-    g.drawString(`${data.current_weather.temperature}°C`, 44, 90);
-    g.drawString(`${data.current_weather.windspeed} m/s, ${data.current_weather.winddirection}°`, 44, 100);
+    g.drawString(`${data.current_weather.temperature}°C`, 88, 120);
+    g.drawString(`${data.current_weather.windspeed} m/s, ${data.current_weather.winddirection}°`, 88, 130);
   }).catch((err) => {
-    g.drawString(err, 44, 95);
+    g.drawString(err, 88, 125);
   });
 }
 
