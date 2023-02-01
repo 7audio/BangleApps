@@ -16,7 +16,7 @@ g.setFontCustom(atob("AAAAGAAYAAAAGAB4A/APwD4AeADgAAAAAAA/8H/4YBjAGMAcwBzAHMAcwB
 function showWelcomeMessage() {
   g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6);
   g.setFontAlign(0, 0).setFont("6x8");
-  g.drawString(`version 5`, 44, 90);
+  g.drawString(`version 6`, 44, 90);
   Bangle.http("https://api.waqi.info/feed/Bangkok/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3").then(data => {
     var aqiStatuses = `0-50\tGood
 51-100\tModerate
@@ -41,9 +41,9 @@ function showWeather() {
   Bangle.http("https://api.open-meteo.com/v1/forecast?latitude=13.75&longitude=100.50&current_weather=true").then(data => {
     var data = JSON.parse(data.resp);
     g.setFont('6x8').setFontAlign(0, 0);
-    g.drawString(`PM2.5: ${data.current_weather.temperature}`, 44, 90);
+    g.drawString(data.current_weather.temperature, 44, 100);
   }).catch((err) => {
-    g.drawString(err, 44, 95);
+    g.drawString(err, 44, 105);
   });
 }
 
