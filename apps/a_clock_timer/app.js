@@ -16,7 +16,6 @@ g.setFontCustom(atob("AAAAGAAYAAAAGAB4A/APwD4AeADgAAAAAAA/8H/4YBjAGMAcwBzAHMAcwB
 function showWelcomeMessage() {
   g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6);
   g.setFontAlign(0, 0).setFont("6x8");
-  g.drawString(`version 6`, 44, 90);
   Bangle.http("https://api.waqi.info/feed/Bangkok/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3").then(data => {
     var aqiStatuses = `0-50\tGood
 51-100\tModerate
