@@ -29,6 +29,7 @@ function showWelcomeMessage() {
     }) || "0\tUnknown";
     var data = JSON.parse(data.resp);
     g.setFont('6x8').setFontAlign(0, 0);
+    g.drawString(`version 1`, 44, 90);
     g.drawString(readableStatus.split("\t")[1], 44, 80);
     g.drawString(`PM2.5: ${data.data.iaqi.pm25.v}`, 44, 70);
   }).catch((err) => {
