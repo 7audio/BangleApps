@@ -16,7 +16,7 @@ g.setFontCustom(atob("AAAAGAAYAAAAGAB4A/APwD4AeADgAAAAAAA/8H/4YBjAGMAcwBzAHMAcwB
 function showWelcomeMessage() {
   g.reset().clearRect(0, 76, 44+44, g.getHeight()/2+6);
   g.setFontAlign(0, 0).setFont("6x8");
-  g.drawString(`version 2`, 44, 90);
+  g.drawString(`version 3`, 44, 90);
   Bangle.http("https://api.waqi.info/feed/Bangkok/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3").then(data => {
     var aqiStatuses = `0-50\tGood
 51-100\tModerate
@@ -33,7 +33,7 @@ function showWelcomeMessage() {
     g.drawString(readableStatus.split("\t")[1], 44, 80);
     g.drawString(`PM2.5: ${data.data.iaqi.pm25.v}`, 44, 70);
   }).catch((err) => {
-    g.drawString(err, 44, 80);
+    g.drawString(err, 44, 75);
   });
 }
 
@@ -61,7 +61,7 @@ function queueNextDraw() {
 
 function draw() {
   g.reset().clearRect(0,24,g.getWidth(),g.getHeight()-IMAGEHEIGHT);
-  g.drawImage(getImg(),0,g.getHeight()-IMAGEHEIGHT);
+  // g.drawImage(getImg(),0,g.getHeight()-IMAGEHEIGHT);
 
   var gmtHours = getGmt().getHours();
 
