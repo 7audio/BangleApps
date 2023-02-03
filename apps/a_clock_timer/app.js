@@ -48,9 +48,9 @@ function showWeather() {
 
 function showWeight() {
   Bangle.http("https://docs.google.com/spreadsheets/d/e/2PACX-1vQiMaFZGokrosoi1naM2WQgYB5mAMU7x3Jtf0obXSgQFstkQDKLYhcEI98XV-hH4e7UgHBieH4C6BZ-/pub?gid=0&single=true&output=csv").then(data => {
-    var data = `${data.resp}`.split("\n").slice(-1);
-    var weight = data.split(",").pop();
-    var measureDate = data.split(",").shift();
+    var result = `${data.resp}`.split("\n").slice(-1);
+    var weight = `${result}`.split(",").pop();
+    var measureDate = `${result}`.split(",").shift();
     g.setFont('6x8').setFontAlign(0, 0);
     g.drawString(`${measureDate}: ${weight} kg`, 88, 140);
     // g.drawString(`${data.current_weather.windspeed} m/s, ${data.current_weather.winddirection}°`, 88, 150);
