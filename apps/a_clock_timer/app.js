@@ -15,7 +15,7 @@ g.setFontCustom(atob("AAAAGAAYAAAAGAB4A/APwD4AeADgAAAAAAA/8H/4YBjAGMAcwBzAHMAcwB
 
 function showWelcomeMessage() {
   g.setFontAlign(0, 0).setFont("6x8");
-  Bangle.http("https://api.waqi.info/feed/Bangkok/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3").then(data => {
+  Bangle.http("https://api.waqi.info/feed/@1861/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3").then(data => {
     var aqiStatuses = `0-50\tGood
 51-100\tModerate
 101-150\tUnhealthy for Sensitive
