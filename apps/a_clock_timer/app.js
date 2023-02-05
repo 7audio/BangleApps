@@ -21,10 +21,10 @@ function showWelcomeMessage() {
     Object.keys(jsonData).forEach((key, i) => {
       var value = jsonData[key];
       var offset = i * 10;
-      g.drawString(`${key}: ${value}`, 88, 90 + offset);
+      g.drawString(`${key}: ${value}`, 88, 100 + offset);
     });
   }).catch((err) => {
-    g.drawString(err, 88, 95);
+    g.drawString(err, 88, 105);
   });
 }
 
