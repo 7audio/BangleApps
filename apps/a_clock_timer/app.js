@@ -15,47 +15,16 @@ g.setFontCustom(atob("AAAAGAAYAAAAGAB4A/APwD4AeADgAAAAAAA/8H/4YBjAGMAcwBzAHMAcwB
 
 function showWelcomeMessage() {
   g.setFontAlign(0, 0).setFont("6x8");
-  Bangle.http("https://api.waqi.info/feed/@1861/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3").then(data => {
-    var aqiStatuses = `0-50\tGood
-51-100\tModerate
-101-150\tUnhealthy for Sensitive
-151-200\tUnhealthy
-201-300\tVery Unhealthy
-300-999999\tHazardous`;
-    var data = JSON.parse(data.resp);
-    var readableStatus = aqiStatuses.split("\n").find(statusLine => {
-      var aqiRange = statusLine.split("\t")[0].split("-");
-      return data.data.aqi >= aqiRange[0] && data.data.aqi <= aqiRange[1];
-    }) || "0\tUnknown";
-    g.setFont('6x8').setFontAlign(0, 0);
-    g.drawString(readableStatus.split("\t")[1], 88, 110);
-    g.drawString(`PM2.5: ${data.data.iaqi.pm25.v}`, 88, 100);
+  g.setFont('6x8').setFontAlign(0, 0);
+  Bangle.http("https://legift.ru/bangle-backend.php").then(data => {
+    var jsonData = JSON.parse(`${data.resp}`);
+    Object.keys(jsonData).forEach((key, i) => {
+      var value = jsonData[key];
+      var offset = i * 10;
+      g.drawString(`${key}: ${value}`, 88, 90 + offset);
+    });
   }).catch((err) => {
-    g.drawString(err, 88, 105);
-  });
-}
-
-function showWeather() {
-  Bangle.http("https://api.open-meteo.com/v1/forecast?latitude=13.75&longitude=100.50&current_weather=true").then(data => {
-    var data = JSON.parse(data.resp);
-    g.setFont('6x8').setFontAlign(0, 0);
-    g.drawString(`${data.current_weather.temperature}°C`, 88, 120);
-    g.drawString(`${data.current_weather.windspeed} m/s, ${data.current_weather.winddirection}°`, 88, 130);
-  }).catch((err) => {
-    g.drawString(err, 88, 125);
-  });
-}
-
-function showWeight() {
-  Bangle.http("https://docs.google.com/spreadsheets/d/e/2PACX-1vQiMaFZGokrosoi1naM2WQgYB5mAMU7x3Jtf0obXSgQFstkQDKLYhcEI98XV-hH4e7UgHBieH4C6BZ-/pub?gid=0&single=true&output=csv").then(data => {
-    var result = `${data.resp}`.split("\n").slice(-1);
-    var weight = `${result}`.split(",").pop();
-    var measureDate = `${result}`.split(",").shift();
-    g.setFont('6x8').setFontAlign(0, 0);
-    g.drawString(`${measureDate}: ${weight} kg`, 88, 140);
-    // g.drawString(`${data.current_weather.windspeed} m/s, ${data.current_weather.winddirection}°`, 88, 150);
-  }).catch((err) => {
-    g.drawString(err, 88, 145);
+    g.drawString(err, 88, 95);
   });
 }
 
@@ -103,5 +72,3 @@ Bangle.setUI("clock");
 Bangle.loadWidgets();
 Bangle.drawWidgets();
 showWelcomeMessage();
-showWeather();
-showWeight();
