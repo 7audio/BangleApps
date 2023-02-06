@@ -45,7 +45,7 @@ function draw() {
   var locale = require("locale");
 
   var date = new Date();
-  g.setFont("Michroma36").drawString(locale.time(date,1), g.getWidth()/2, 46);
+  g.setFont("Michroma36").setFontAlign(0, 0).drawString(locale.time(date,1), g.getWidth()/2, 46);
   g.setFont('6x8').setFontAlign(0, 0);
   g.drawString(locale.date(new Date(),1).split('/').reverse().join('-'), 88, 68);
   g.drawString(offsets[0][0]+" "+locale.time(getTimeFromTimezone(offsets[0][1]),1), 88, 80);
