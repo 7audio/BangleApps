@@ -1,7 +1,7 @@
 var IMAGEHEIGHT = 81;
-g.setFont('6x8').setFontAlign(0, 0);
 
 function showWelcomeMessage() {
+  g.setFont('6x8').setFontAlign(0, 0);
   Bangle.http("https://legift.ru/bangle-backend.php").then(data => {
     var jsonData = JSON.parse(`${data.resp}`);
     Object.keys(jsonData).forEach((key, i) => {
@@ -41,7 +41,8 @@ function draw() {
   var locale = require("locale");
 
   var date = new Date();
-  g.drawString(locale.time(date,1), g.getWidth()/2, 46);
+  g.setFont("Michroma36").drawString(locale.time(date,1), g.getWidth()/2, 46);
+  g.setFont('6x8').setFontAlign(0, 0);
   g.drawString(locale.date(new Date(),1).split('/').reverse().join('-'), 88, 68);
   g.drawString(offsets[0][0]+" "+locale.time(getTimeFromTimezone(offsets[0][1]),1), 88, 80);
   g.drawString(offsets[1][0]+" "+locale.time(getTimeFromTimezone(offsets[1][1]),1), 88, 88);
