@@ -5,8 +5,8 @@ g.setFontCustom(atob("AAAAAAAAAAAAAAAAeAAAAAeAAAAAeAAAAAeAAAAAAAAAAAAAAAAAAAAAAA
 };
 
 function showWelcomeMessage() {
-  g.setFont('6x8').setFontAlign(0, 0);
   Bangle.http("https://legift.ru/bangle-backend.php").then(data => {
+    g.setFont('6x8').setFontAlign(0, 0);
     var jsonData = JSON.parse(`${data.resp}`);
     Object.keys(jsonData).forEach((key, i) => {
       var value = jsonData[key];
