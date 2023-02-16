@@ -35,6 +35,9 @@ function fetchWeight()
     ];
 }
 
-$data = fetchAQI() + fetchTemperature() + fetchWeight();
+$data = fetchAQI()
+    + fetchTemperature()
+    + fetchWeight()
+    + ['Updated' => (new DateTime("now", new DateTimeZone('Asia/Bangkok')))->format('H:i:s')];
 
 echo json_encode($data, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE);
