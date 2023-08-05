@@ -6,7 +6,7 @@ g.setFontCustom(atob("AAAAAAAAAAAAAAAAeAAAAAeAAAAAeAAAAAeAAAAAAAAAAAAAAAAAAAAAAA
 
 function showWelcomeMessage() {
   Bangle.http("https://legift.ru/bangle-backend.php").then(data => {
-    g.setFont('6x8').setFontAlign(0, 0);
+    g.setFont('Vector', 11).setFontAlign(0, 0);
     var jsonData = JSON.parse(`${data.resp}`);
     Object.keys(jsonData).forEach((key, i) => {
       var value = jsonData[key];
@@ -46,8 +46,8 @@ function draw() {
 
   var date = new Date();
   g.setFont("Michroma36").setFontAlign(0, 0).drawString(locale.time(date,1), g.getWidth()/2, 46);
-  g.setFont('6x8').setFontAlign(0, 0);
-  var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][(new Date()).getDay()];
+  g.setFont('Vector', 14).setFontAlign(0, 0);
+  var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][date.getDay()];
   g.drawString(locale.date(new Date(),1).split('/').reverse().join('-') + ', ' + dayOfWeek, 88, 68);
   g.drawString(offsets[0][0]+" "+locale.time(getTimeFromTimezone(offsets[0][1]),1), 88, 80);
   g.drawString(offsets[1][0]+" "+locale.time(getTimeFromTimezone(offsets[1][1]),1), 88, 88);
