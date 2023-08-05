@@ -31,7 +31,7 @@ function fetchWeight()
     $weightData = explode("\n", $weightData);
     $weightData = explode(",", $weightData[count($weightData) - 1]);
     return [
-        'Weight' => sprintf("%s (%s)", trim($weightData[count($weightData) - 1]), $weightData[0]),
+        'Weight' => sprintf("%s (%s)", trim($weightData[1]), $weightData[0]),
     ];
 }
 
