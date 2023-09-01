@@ -11,8 +11,7 @@ function fetchAQI()
         return $aqiData["data"]["aqi"] >= $aqiRange[0] && $aqiData["data"]["aqi"] <= $aqiRange[1];
     }, explode("\n", $aqiStatuses)))];
     return [
-        "PM2.5" => $aqiData["data"]["iaqi"]["pm25"]["v"],
-        "Level" => explode("\t", $readableStatus)[1],
+        'aqi' => sprintf("PM2.5: %s (%s)", $aqiData["data"]["iaqi"]["pm25"]["v"], explode("\t", $readableStatus)[1]),
     ];
 }
 
@@ -20,8 +19,12 @@ function fetchTemperature()
 {
     $weatherData = json_decode(file_get_contents("https://api.open-meteo.com/v1/forecast?latitude=13.75&longitude=100.50&current_weather=true"), true);
     return [
-        'T' => $weatherData["current_weather"]["temperature"] . '°C',
-        'Wind' => $weatherData["current_weather"]["windspeed"] . " m/s, " . $weatherData["current_weather"]["winddirection"] . "°",
+        'w' => sprintf(
+            "T:%s°C W:%sm/s %s°",
+            $weatherData["current_weather"]["temperature"],
+            $weatherData["current_weather"]["windspeed"],
+            $weatherData["current_weather"]["winddirection"]
+        ),
     ];
 }
 

@@ -14,7 +14,7 @@ function showWelcomeMessage() {
       g.drawString(`${key}: ${value}`, 88, 100 + offset);
     });
   }).catch((err) => {
-    g.drawString(err, 88, 105);
+    g.drawString(err.message, 88, 105);
   });
 }
 
