@@ -14,7 +14,7 @@ function showWelcomeMessage() {
       g.drawString(`${key}: ${value}`, 88, 100 + offset);
     });
   }).catch((err) => {
-    g.drawString(err.message, 88, 105);
+    g.drawString(err, 88, 105);
   });
 }
 
@@ -56,9 +56,10 @@ function draw() {
 }
 
 // init
-g.setTheme({bg:"#fff",fg:"#000",dark:false}).clear();
+g.setTheme({bg:"#000",fg:"#fff",dark:true}).clear();
 draw();
 Bangle.setUI("clock");
 Bangle.loadWidgets();
 Bangle.drawWidgets();
 showWelcomeMessage();
+g.setTheme({bg:"#fff",fg:"#000",dark:false});
