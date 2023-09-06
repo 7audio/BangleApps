@@ -62,4 +62,3 @@ Bangle.setUI("clock");
 Bangle.loadWidgets();
 Bangle.drawWidgets();
 showWelcomeMessage();
-g.setTheme({bg:"#fff",fg:"#000",dark:false});
