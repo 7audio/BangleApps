@@ -25,6 +25,15 @@ function uint8ArrayToTimestamps(byteArray) {
   return timestamps;
 }
 
+function sendTimestamps(text) {
+  Bangle.http("https://legift.ru/puckfind.php?message=" + btoa(text)).then(data => {
+    out('Sent');
+  }).catch((err) => {
+    out('Error when sending');
+    setTimeout(() => out(err), 1100);
+  });
+}
+
 function findPuck() {
   NRF.findDevices((devices) => {
     let puck = devices.find(device => (device.name && device.name === SEARCH_NAME));
@@ -33,7 +42,8 @@ function findPuck() {
       let timestamps = uint8ArrayToTimestamps(puck.manufacturerData);
       if (timestamps && timestamps.length > 0) {
         let dateTimes = timestamps.map(timestamp => new Date(timestamp * 1000).toISOString());
-        out(dateTimes.join('\n') || 'Timestamps empty');
+        out(dateTimes.join('\n'));
+        sendTimestamps(dateTimes.join('\n'));
       } else {
         out("Timestamps not found");
       }
