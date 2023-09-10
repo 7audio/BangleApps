@@ -6,6 +6,8 @@
   "icon": "puckfind.png",
   "tags": "puck",
   "supports": ["BANGLEJS2"],
-  "src":"puckfind.app.js",
-  "storage": [{"name":"puckfind.app.js","url":"puckfind.app.js"}]
+  "storage": [
+    {"name":"puckfind.app.js","url":"puckfind.app.js"},
+    {"name":"puckfind.img","url":"app-icon.js","evaluate":true}
+  ]
 }
