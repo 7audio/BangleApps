@@ -1,5 +1,6 @@
 {
   "id":"puckfind",
   "name":"Puckfind",
+  "version": "0.01",
   "src":"puckfind.app.js"
 }
