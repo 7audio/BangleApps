@@ -40,7 +40,7 @@ function findPuck() {
     if (puck) {
       out("Found " + SEARCH_NAME);
       let timestamps = uint8ArrayToTimestamps(puck.manufacturerData);
-      if (timestamps && timestamps.length > 0) {
+      if (timestamps && timestamps.length > 0 && !(timestamps.length === 1 && timestamps[0] === 0)) {
         let dateTimes = timestamps.map(timestamp => new Date(timestamp * 1000).toISOString());
         out(dateTimes.join('\n'));
         sendTimestamps(dateTimes.join('\n'));

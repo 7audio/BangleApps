@@ -1,7 +1,7 @@
 {
   "id":"puckfind",
   "name":"Puckfind",
-  "version": "0.02",
+  "version": "0.03",
   "description":"BangleJs conduit for Puckjs sleeptracker",
   "icon": "puckfind.png",
   "tags": "puck",
