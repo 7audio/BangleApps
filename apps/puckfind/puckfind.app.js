@@ -1,5 +1,5 @@
-let SEARCH_NAME = 'Puck.js c77d';
-let TIMEOUT = 5000;
+let SEARCH_NAME = 'Puck.js ebbc';
+let TIMEOUT = 8000;
 
 function out(msg) {
   console.log(msg);
@@ -30,7 +30,7 @@ function sendTimestamps(text) {
     out('Sent');
   }).catch((err) => {
     out('Error when sending');
-    setTimeout(() => out(err), 1100);
+    setTimeout(() => out(err), 750);
   });
 }
 
