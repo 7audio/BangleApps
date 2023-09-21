@@ -1,4 +1,4 @@
-let SEARCH_NAME = 'Puck.js c77d';
+let SEARCH_ID = 'c7:7d';
 let TIMEOUT = 8000;
 
 function out(msg) {
@@ -7,8 +7,8 @@ function out(msg) {
 }
 
 function refreshFindPuck() {
-  out("Started looking for " + SEARCH_NAME);
-  setTimeout(() => out("Looking for " + SEARCH_NAME), 100);
+  out("Started looking for " + SEARCH_ID);
+  setTimeout(() => out("Looking for " + SEARCH_ID), 100);
   setTimeout(() => findPuck(), 200);
 }
 
@@ -36,48 +36,41 @@ function sendTimestamps(text) {
 
 function findPuck() {
   var gatt;
-  const sendThem = them => {
-    out("Sending " + them);
-    sendTimestamps(them);
-  };
-  NRF.requestDevice({ timeout: 10500, filters: [{ services: "3e440001-f5bb-357d-719d-179272e4d4d9" }] }).then(function(device) {
-    out("Found " + SEARCH_NAME);
-    return device.gatt.connect();
-  }).then(function(g) {
-    out("Connected " + SEARCH_NAME);
-    gatt = g;
-    return gatt.getPrimaryService("3e440001-f5bb-357d-719d-179272e4d4d9");
-  }).then(function(service) {
-    out("Got service");
-    return service.getCharacteristic("3e440002-f5bb-357d-719d-179272e4d4d9");
-  }).then(function(characteristic) {
-    out("Got characteristic");
-    return characteristic.readValue();
-  }).then(function(d) {
-    out("Done! " + JSON.stringify(d.buffer));
-    console.log("Done!", JSON.stringify(d.buffer));
-    gatt.disconnect();
-    sendThem(JSON.stringify(d.buffer));
-  }).catch(function(err) {
-    out("Error: " + err);
-  });
-
-  // NRF.findDevices((devices) => {
-  //   let puck = devices.find(device => (device.name && device.name === SEARCH_NAME));
-  //   if (puck) {
-  //     out("Found " + SEARCH_NAME);
-  //     let timestamps = uint8ArrayToTimestamps(puck.manufacturerData);
-  //     if (timestamps && timestamps.length > 0 && !(timestamps.length === 1 && timestamps[0] === 0)) {
-  //       let dateTimes = timestamps.map(timestamp => new Date(timestamp * 1000).toISOString());
-  //       out(dateTimes.join('\n'));
-  //       sendTimestamps(dateTimes.join('\n'));
-  //     } else {
-  //       out("Timestamps not found");
-  //     }
-  //   } else {
-  //     out(SEARCH_NAME + " not found");
-  //   }
-  // }, { timeout: TIMEOUT });
+  NRF.findDevices(function(d) {
+    console.log(d);
+    const thePuckINeed = d.find(device => (device.id && device.id.includes(SEARCH_ID)));
+    if (!thePuckINeed) {
+      out("Cant not find");
+      return;
+    };
+    thePuckINeed.gatt.connect()
+      .then(function(g) {
+        out("Connected " + SEARCH_ID);
+        gatt = g;
+        return gatt.getPrimaryService("3e440001-f5bb-357d-719d-179272e4d4d9");
+      }).then(function(service) {
+        out("Got service");
+        return service.getCharacteristic("3e440002-f5bb-357d-719d-179272e4d4d9");
+      }).then(function(characteristic) {
+        out("Got characteristic");
+        return characteristic.readValue();
+      }).then(function(d) {
+        out("Done! " + JSON.stringify(d.buffer));
+        console.log("Done!", JSON.stringify(d.buffer));
+        gatt.disconnect();
+        const timestamps = uint8ArrayToTimestamps(d.buffer);
+        if (timestamps && timestamps.length > 0 && !(timestamps.length === 1 && timestamps[0] === 0)) {
+          let dateTimes = timestamps.map(timestamp => new Date(timestamp * 1000).toISOString());
+          out(dateTimes.join('\n'));
+          sendTimestamps(dateTimes.join('\n'));
+        } else {
+          out("Timestamps not found");
+        }
+      })
+      .catch(function(err) {
+        out("Error: " + err);
+      });
+  }, 3500);
 }
 
 refreshFindPuck();
