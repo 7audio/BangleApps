@@ -42,7 +42,7 @@ function findPuck() {
     if (!thePuckINeed) {
       out("Cant not find");
       return;
-    };
+    }
     thePuckINeed.gatt.connect()
       .then(function(g) {
         out("Connected " + SEARCH_ID);
