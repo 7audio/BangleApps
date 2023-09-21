@@ -1,4 +1,4 @@
-let SEARCH_NAME = 'Puck.js ebbc';
+let SEARCH_NAME = 'Puck.js c77d';
 let TIMEOUT = 8000;
 
 function out(msg) {
