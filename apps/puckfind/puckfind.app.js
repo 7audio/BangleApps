@@ -40,7 +40,7 @@ function findPuck() {
     out("Sending " + them);
     sendTimestamps(them);
   };
-  NRF.requestDevice({ filters: [{ name: SEARCH_NAME }] }).then(function(device) {
+  NRF.requestDevice({ timeout: 8500, filters: [{ name: SEARCH_NAME }] }).then(function(device) {
     out("Found " + SEARCH_NAME);
     return device.gatt.connect();
   }).then(function(g) {
