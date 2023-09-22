@@ -60,7 +60,7 @@ function findPuck() {
         gatt.disconnect();
         const timestamps = uint8ArrayToTimestamps(d.buffer);
         if (timestamps && timestamps.length > 0 && !(timestamps.length === 1 && timestamps[0] === 0)) {
-          let dateTimes = timestamps.map(timestamp => new Date(timestamp * 1000).toISOString());
+          let dateTimes = timestamps.map(timestamp => new Date(timestamp * 1000).toISOString().substring(0, 19).replace('T', ' '));
           out(dateTimes.join('\n'));
           sendTimestamps(dateTimes.join('\n'));
         } else {
