@@ -1,14 +1,23 @@
-let SEARCH_ID = 'c7:7d';
+let SEARCH_IDS = ['c7:7d', 'eb:bc'];
 let TIMEOUT = 8000;
+let currentSearchId = 1;
 
 function out(msg) {
   console.log(msg);
   E.showMessage(msg);
 }
 
+function loopSearchIds() {
+  currentSearchId++;
+  if (currentSearchId >= SEARCH_IDS.length) {
+    currentSearchId = 0;
+  }
+  out('Target: ' + SEARCH_IDS[currentSearchId]);
+}
+
 function refreshFindPuck() {
-  out("Started looking for " + SEARCH_ID);
-  setTimeout(() => out("Looking for " + SEARCH_ID), 100);
+  out("Started looking for " + SEARCH_IDS[currentSearchId]);
+  setTimeout(() => out("Looking for " + SEARCH_IDS[currentSearchId]), 100);
   setTimeout(() => findPuck(), 200);
 }
 
@@ -38,14 +47,14 @@ function findPuck() {
   var gatt;
   NRF.findDevices(function(d) {
     console.log(d);
-    const thePuckINeed = d.find(device => (device.id && device.id.includes(SEARCH_ID)));
+    const thePuckINeed = d.find(device => (device.id && device.id.includes(SEARCH_IDS[currentSearchId])));
     if (!thePuckINeed) {
       out("Cant not find");
       return;
     }
     thePuckINeed.gatt.connect()
       .then(function(g) {
-        out("Connected " + SEARCH_ID);
+        out("Connected " + SEARCH_IDS[currentSearchId]);
         gatt = g;
         return gatt.getPrimaryService("3e440001-f5bb-357d-719d-179272e4d4d9");
       }).then(function(service) {
@@ -73,8 +82,11 @@ function findPuck() {
   }, 3500);
 }
 
-refreshFindPuck();
+loopSearchIds();
+// refreshFindPuck();
 
 setWatch(() => {
   refreshFindPuck();
 }, BTN1, { edge: 'rising', repeat: true, debounce: 50 });
+
+Bangle.on('touch', loopSearchIds);
