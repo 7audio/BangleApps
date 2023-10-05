@@ -38,9 +38,24 @@ function fetchWeight()
     ];
 }
 
+function fetchPixlDashboard()
+{
+    $result = file_get_contents('https://legift.ru/pixl-backend.php');
+    $lines = explode("\n", $result);
+    $data = [];
+    foreach ($lines as $i => $line) {
+        $semicolonPos = strpos($line, ':');
+        $key = substr($line, 0, $semicolonPos);
+        $value = substr($line, $semicolonPos + 1);
+        $data[$key] = $value;
+    }
+    return $data;
+}
+
 $data = fetchAQI()
     + fetchTemperature()
-    + fetchWeight()
-    + ['Updated' => (new DateTime("now", new DateTimeZone('Asia/Bangkok')))->format('H:i:s')];
+    // + fetchWeight()
+    + fetchPixlDashboard()
+    + ['updated' => (new DateTime("now", new DateTimeZone('Asia/Bangkok')))->format('H:i:s')];
 
 echo json_encode($data, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE);
