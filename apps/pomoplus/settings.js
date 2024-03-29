@@ -5,10 +5,10 @@ const storage = require("Storage");
     let settings = storage.readJSON(SETTINGS_PATH);
     if (!settings) {
         settings = {
-            workTime: 1500000,                  //Work for 25 minutes
-            shortBreak: 300000,                 //5 minute short break
+            workTime: 35000,                  //Work for 25 minutes
+            shortBreak: 10000,                 //5 minute short break
             longBreak: 900000,                  //15 minute long break
-            numShortBreaks: 3,                  //3 short breaks for every long break
+            numShortBreaks: 10,                  //3 short breaks for every long break
             pausedTimerExpireTime: 21600000,    //If the timer was left paused for >6 hours, reset it on next launch
             showClock: false,                   //Show clock after start/resume
             widget: false,                      //If a widget is added in the future, whether the user wants it
