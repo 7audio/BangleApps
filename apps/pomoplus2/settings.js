@@ -1,4 +1,4 @@
-const SETTINGS_PATH = 'pomoplus2.json';
+const SETTINGS_PATH = 'pomoplus.json';
 const storage = require("Storage");
 
 (function (back) {

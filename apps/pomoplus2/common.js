@@ -1,8 +1,8 @@
 const storage = require("Storage");
 const heatshrink = require("heatshrink");
 
-exports.STATE_PATH = "pomoplus2.state.json";
-exports.SETTINGS_PATH = "pomoplus2.json";
+exports.STATE_PATH = "pomoplus.state.json";
+exports.SETTINGS_PATH = "pomoplus.json";
 
 exports.PHASE_WORKING = 0;
 exports.PHASE_SHORT_BREAK = 1;

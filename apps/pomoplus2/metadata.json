@@ -29,11 +29,11 @@
       "url": "common.js"
     },
     {
-      "name": "pomoplus2.settings.js",
+      "name": "pomoplus.settings.js",
       "url": "settings.js"
     }
   ],
   "data": [
-    {"name":"pomoplus2.settings.json"}
+    {"name":"pomoplus.settings.json"}
   ]
 }
