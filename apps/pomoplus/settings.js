@@ -24,8 +24,8 @@ const storage = require("Storage");
         '< Back': back,
         'Work time': {
             value: settings.workTime,
-            step: 60000,    //1 minute
-            min: 60000,
+            step: 1000,    //1 minute
+            min: 1000,
             // max: 10800000,
             // wrap: true,
             onchange: function (value) {
@@ -33,13 +33,13 @@ const storage = require("Storage");
                 save();
             },
             format: function (value) {
-                return '' + (value / 60000) + 'm'
+                return '' + (value / 1000) + 's'
             }
         },
         'Short break time': {
             value: settings.shortBreak,
-            step: 60000,
-            min: 60000,
+            step: 1000,
+            min: 1000,
             // max: 10800000,
             // wrap: true,
             onchange: function (value) {
@@ -47,7 +47,7 @@ const storage = require("Storage");
                 save();
             },
             format: function (value) {
-                return '' + (value / 60000) + 'm'
+                return '' + (value / 1000) + 's'
             }
         },
         '# Short breaks': {
