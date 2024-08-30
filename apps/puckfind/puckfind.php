@@ -6,6 +6,18 @@ $text = base64_decode($text);
 
 $disableNotification = (bool) $_GET['disable_notification'] ?? true;
 
+if ($_GET['extend_timestamps'] ?? false) {
+    $lines = explode("\n", $text);
+    if (isset($lines[0])) $lines[0] .= ' лег';
+    if (isset($lines[1])) $lines[1] .= ' закрыл глаза';
+    if (isset($lines[2])) {
+        $lines[2] .= ' встал с кровати';
+        $lines[] = mb_substr($lines[2], 0, 10) . ' будильник';
+        array_unshift($lines, implode('.', array_reverse(explode('-', mb_substr($lines[2], 0, 10)))));
+    }
+    $text = implode("\n", $lines);
+}
+
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org//sendMessage');
