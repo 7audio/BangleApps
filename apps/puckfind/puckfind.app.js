@@ -35,7 +35,7 @@ function uint8ArrayToTimestamps(byteArray) {
 }
 
 function sendTimestamps(text) {
-  Bangle.http("https://legift.ru/puckfind.php?message=" + btoa(text)).then(data => {
+  Bangle.http("https://legift.ru/puckfind.php?extend_timestamps=1&message=" + btoa(text)).then(data => {
     out('Sent');
   }).catch((err) => {
     out('Error when sending');
@@ -70,11 +70,6 @@ function findPuck() {
         const timestamps = uint8ArrayToTimestamps(d.buffer);
         if (timestamps && timestamps.length > 0 && !(timestamps.length === 1 && timestamps[0] === 0)) {
           let dateTimes = timestamps.map(timestamp => new Date(timestamp * 1000).toISOString().substring(0, 19).replace('T', ' '));
-          dateTimes[0] && (dateTimes[0] = dateTimes[0] + ' лег');
-          dateTimes[1] && (dateTimes[1] = dateTimes[1] + ' закрыл глаза');
-          dateTimes[2] && dateTimes.push(dateTimes[2].substring(0, 11) + ' будильник');
-          dateTimes[2] && (dateTimes[2] = dateTimes[2] + ' встал с кровати');
-          dateTimes[2] && dateTimes.unshift(dateTimes[2].substring(0, 10).split('-').reverse().join('.'));
           out(dateTimes.join('\n'));
           sendTimestamps(dateTimes.join('\n'));
         } else {
