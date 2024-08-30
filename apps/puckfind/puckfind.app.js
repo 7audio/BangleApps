@@ -74,7 +74,7 @@ function findPuck() {
           dateTimes[1] && (dateTimes[1] = dateTimes[1] + ' закрыл глаза');
           dateTimes[2] && dateTimes.push(dateTimes[2].substring(0, 11) + ' будильник');
           dateTimes[2] && (dateTimes[2] = dateTimes[2] + ' встал с кровати');
-          dateTimes[2] && dateTimes.unshift(dateTimes.substring(0, 10).split('-').reverse().join('.'));
+          dateTimes[2] && dateTimes.unshift(dateTimes[2].substring(0, 10).split('-').reverse().join('.'));
           out(dateTimes.join('\n'));
           sendTimestamps(dateTimes.join('\n'));
         } else {
