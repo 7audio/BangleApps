@@ -3,29 +3,34 @@ function out(msg) {
   E.showMessage(msg);
 }
 
-const koeff = 75;
+const intro = 5
+const otdyx = 10
+const rabota = 40
+
+const buzzShortMs = 85
+const buzzLongMs = 170
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function blinkBlue() {
-  Bangle.buzz(50)
+  Bangle.buzz(buzzShortMs)
   out('blue')
 }
 
 function blinkGreen() {
-  Bangle.buzz(50)
+  Bangle.buzz(buzzShortMs)
   out('green')
 }
 
 function blinkRed() {
-  Bangle.buzz(50)
+  Bangle.buzz(buzzShortMs)
   out('red')
 }
 
 function blinkAllThree() {
-  Bangle.buzz(koeff)
+  Bangle.buzz(buzzLongMs)
   out('all three')
 }
 
@@ -33,38 +38,34 @@ function blinkAllThreeThrice() {
   for (let i = 0; i < 3; i++) {
     setTimeout(function () {
       blinkAllThree();
-    }, i * koeff * 3);
+    }, i * buzzLongMs * 3);
   }
 }
 
 function otrezokEnding() {
   setTimeout(function () {
-    blinkBlue(); // Blink blue LED after 1 second
+    blinkBlue();
     setTimeout(function () {
-      blinkGreen(); // Blink green LED after 950 ms
+      blinkGreen();
       setTimeout(function () {
-        blinkRed(); // Blink red LED after another 950 ms
+        blinkRed();
         setTimeout(function () {
           blinkAllThreeThrice();
-        }, 1000 - koeff);
-      }, 1000 - koeff);
-    }, 1000 - koeff);
+        }, 1000 - buzzLongMs);
+      }, 1000 - buzzLongMs);
+    }, 1000 - buzzLongMs);
   }, 1000);
 }
 
 function otrezokNSec(n) {
   const totalTime = 1000 * n
-  const otrezokEndingLength = 3000 + koeff
+  const otrezokEndingLength = 3000 + buzzLongMs
   const jdatVTishine = totalTime - otrezokEndingLength
   out(`${totalTime}\n${jdatVTishine}`)
   return wait(jdatVTishine).then(() => otrezokEnding());
 }
 
 const runOtrezok = function() {
-  const intro = 4
-  const otdyx = 10
-  const rabota = 38
-
   otrezokNSec(intro);
 
   wait(1000*intro + (0*1000*(otdyx+rabota))).then(() => otrezokNSec(otdyx));
@@ -98,14 +99,13 @@ const runOtrezok = function() {
   wait(1000*intro + (9*1000*(otdyx+rabota))).then(() => otrezokNSec(otdyx+rabota));
 
   wait(2000+1000*intro + (10*1000*(otdyx+rabota))).then(() => {
-    out('done')
+    out('dope <3')
     Bangle.buzz(3333)
   });
 }
 
+out('you handsome');
+
 setWatch(() => {
   runOtrezok()
 }, BTN1, { edge: 'rising', repeat: true, debounce: 50 });
-
-// Bangle.on('touch', loopSearchIds);
-
