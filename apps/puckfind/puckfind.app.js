@@ -1,4 +1,4 @@
-let SEARCH_IDS = ['c7:7d', 'eb:bc'];
+let SEARCH_IDS = ['eb:bc', 'c7:7d'];
 let TIMEOUT = 8000;
 let currentSearchId = 1;
 
@@ -90,3 +90,4 @@ setWatch(() => {
 }, BTN1, { edge: 'rising', repeat: true, debounce: 50 });
 
 Bangle.on('touch', loopSearchIds);
+setTimeout(() => refreshFindPuck(), 1333);
