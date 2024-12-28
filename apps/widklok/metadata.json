@@ -1,7 +1,7 @@
 {
   "id": "widklok",
   "name": "widklok",
-  "version": "0.06",
+  "version": "0.07",
   "description": "Tiny clock widget",
   "icon": "widget.png",
   "type": "widget",
