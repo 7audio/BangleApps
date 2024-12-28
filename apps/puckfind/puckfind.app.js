@@ -49,6 +49,7 @@ function sendTimestamps(text, characteristic) {
 
 function findPuck() {
   var gatt;
+  var characteristicObj;
   NRF.findDevices(function(d) {
     console.log(d);
     const thePuckINeed = d.find(device => (device.id && device.id.includes(SEARCH_IDS[currentSearchId])));
@@ -66,6 +67,7 @@ function findPuck() {
         return service.getCharacteristic("3e440002-f5bb-357d-719d-179272e4d4d9");
       }).then(function(characteristic) {
         out("Got characteristic");
+        characteristicObj = characteristic;
         return characteristic.readValue();
       }).then(function(d) {
         out("Done! " + JSON.stringify(d.buffer));
@@ -75,7 +77,7 @@ function findPuck() {
         if (timestamps && timestamps.length > 0 && !(timestamps.length === 1 && timestamps[0] === 0)) {
           let dateTimes = timestamps.map(timestamp => new Date(timestamp * 1000).toISOString().substring(0, 19).replace('T', ' '));
           out(dateTimes.join('\n'));
-          sendTimestamps(dateTimes.join('\n'), characteristic);
+          sendTimestamps(dateTimes.join('\n'), characteristicObj);
         } else {
           out("Timestamps not found");
         }
