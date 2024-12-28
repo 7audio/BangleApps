@@ -1,4 +1,4 @@
-WIDGETS["widklok"] = { area:"tr", width:16, draw: function() {
+WIDGETS["widklok"] = { area:"tl", width: 36, draw: function() {
   var date = new Date();
   var timeStr = require("locale").time(date, 1);
   g.reset().setColor(g.theme.dark ? "#fff" : "#000").setFont("Vector", 13);
