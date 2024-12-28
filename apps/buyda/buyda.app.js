@@ -3,9 +3,9 @@ function out(msg) {
   E.showMessage(msg);
 }
 
-const intro = 5
-const otdyx = 10
-const rabota = 40
+const intro = 6
+const otdyx = 11
+const rabota = 42
 
 const buzzShortMs = 85
 const buzzLongMs = 170
