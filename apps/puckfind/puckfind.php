@@ -20,7 +20,8 @@ if ($_GET['extend_timestamps'] ?? false) {
 
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org//sendMessage');
+$tgToken = '__TG_TOKEN__';
+curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/$tgToken/sendMessage");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
