@@ -36,8 +36,8 @@ function uint8ArrayToTimestamps(byteArray) {
 
 function sendTimestamps(text, characteristic) {
   Bangle.http("https://legift.ru/puckfind.php?extend_timestamps=1&message=" + btoa(text)).then(data => {
-    out(`Sent ${data}`);
-    (data === 'ok') && setTimeout(() => {
+    out(`Sent ${data.resp}`);
+    (data.resp === 'ok') && setTimeout(() => {
       out('Writing');
       characteristic.writeValue("Hello");
     }, 3333);
