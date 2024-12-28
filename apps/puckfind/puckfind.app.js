@@ -34,12 +34,16 @@ function uint8ArrayToTimestamps(byteArray) {
   return timestamps;
 }
 
-function sendTimestamps(text, characteristic) {
+function sendTimestamps(text, characteristic, gatt) {
   Bangle.http("https://legift.ru/puckfind.php?extend_timestamps=1&message=" + btoa(text)).then(data => {
     out(`Sent ${data.resp}`);
     (data.resp === 'ok') && setTimeout(() => {
       out('Writing');
       characteristic.writeValue("Hello");
+      setTimeout(() => {
+        out('Disconnecting');
+        gatt.disconnect();
+      }, 2333);
     }, 3333);
   }).catch((err) => {
     out('Error when sending');
@@ -72,14 +76,14 @@ function findPuck() {
       }).then(function(d) {
         out("Done! " + JSON.stringify(d.buffer));
         console.log("Done!", JSON.stringify(d.buffer));
-        gatt.disconnect();
         const timestamps = uint8ArrayToTimestamps(d.buffer);
         if (timestamps && timestamps.length > 0 && !(timestamps.length === 1 && timestamps[0] === 0)) {
           let dateTimes = timestamps.map(timestamp => new Date(timestamp * 1000).toISOString().substring(0, 19).replace('T', ' '));
           out(dateTimes.join('\n'));
-          sendTimestamps(dateTimes.join('\n'), characteristicObj);
+          sendTimestamps(dateTimes.join('\n'), characteristicObj, gatt);
         } else {
           out("Timestamps not found");
+          gatt.disconnect();
         }
       })
       .catch(function(err) {
