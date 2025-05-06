@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Puckfind Web App</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #log { white-space: pre-wrap; background: #f0f0f0; padding: 10px; border: 1px solid #ccc; height: 300px; overflow-y: scroll; }
+    button { margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Puckfind Web App</h1>
+  <button id="connect">Connect to Puck.js</button>
+  <button id="send" disabled>Send Timestamps</button>
+  <pre id="log"></pre>
+  <script>
+    const serviceUuid = '3e440001-f5bb-357d-719d-179272e4d4d9';
+    const charUuid    = '3e440002-f5bb-357d-719d-179272e4d4d9';
+    let bleDevice, bleCharacteristic, timestamps;
+
+    function out(msg) {
+      console.log(msg);
+      const log = document.getElementById('log');
+      log.textContent += msg + '\n';
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function uint8ArrayToTimestamps(buffer) {
+      if (!buffer || buffer.byteLength === 0) return null;
+      const view = new DataView(buffer);
+      const ts = [];
+      for (let i = 0; i < buffer.byteLength; i += 4) {
+        ts.push(view.getUint32(i, true));
+      }
+      return ts;
+    }
+
+    const connectToPuck = () => {
+      out('Requesting Puck.js device...');
+      navigator.bluetooth.requestDevice({
+        filters: [{ namePrefix: 'Puck.js' }],
+        optionalServices: [serviceUuid]
+      })
+      .then(device => {
+        bleDevice = device;
+        out('Found: ' + device.name);
+        return device.gatt.connect();
+      })
+      .then(server => {
+        out('Connected');
+        return server.getPrimaryService(serviceUuid);
+      })
+      .then(service => {
+        out('Got service');
+        return service.getCharacteristic(charUuid);
+      })
+      .then(characteristic => {
+        bleCharacteristic = characteristic;
+        out('Got characteristic');
+        return characteristic.readValue();
+      })
+      .then(value => {
+        out('Read raw data: ' + JSON.stringify(Array.from(new Uint8Array(value.buffer))));
+        timestamps = uint8ArrayToTimestamps(value.buffer);
+        if (timestamps && timestamps.length > 0 && !(timestamps.length === 1 && timestamps[0] === 0)) {
+          const dateTimes = timestamps.map(ts =>
+            new Date(ts * 1000).toISOString().substring(0, 19).replace('T', ' ')
+          );
+          out('Timestamps:\n' + dateTimes.join('\n'));
+          document.getElementById('send').disabled = false;
+        } else {
+          out('No timestamps found.');
+        }
+      })
+      .catch(error => out('Error: ' + error));
+    };
+    document.getElementById('connect').addEventListener('click', connectToPuck);
+
+    document.getElementById('send').addEventListener('click', () => {
+      if (!timestamps || !bleCharacteristic) return;
+      const text = timestamps.map(ts =>
+        new Date(ts * 1000).toISOString().substring(0, 19).replace('T', ' ')
+      ).join('\n');
+      out('Sending to server...');
+      fetch('/puckfind.php?extend_timestamps=1&message=' + btoa(text))
+      .then(response => response.text())
+      .then(data => {
+        out('Server response: ' + data);
+        if (data.trim() === 'ok') {
+          out('Writing Hello to Puck.js');
+          const encoder = new TextEncoder();
+          return bleCharacteristic.writeValue(encoder.encode('Hello'));
+        } else {
+          throw new Error('Server returned ' + data);
+        }
+      })
+      .then(() => {
+        out('Written Hello, disconnecting...');
+        return bleDevice.gatt.disconnect();
+      })
+      .then(() => out('Disconnected'))
+      .catch(error => {
+        out('Error: ' + error);
+        alert(`You might want to clean up manually.\nError:\n${error}`);
+      });
+    });
+
+    // setTimeout(() => connectToPuck(), 1000);
+  </script>
+</body>
+</html>
