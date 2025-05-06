@@ -1,5 +1,7 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+
 $text = $_GET['message'] ?? $argv[1] ?? 'Hello';
 
 $text = base64_decode($text);
