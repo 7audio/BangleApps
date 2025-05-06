@@ -2,11 +2,25 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Puckfind Web App</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    #log { white-space: pre-wrap; background: #f0f0f0; padding: 10px; border: 1px solid #ccc; height: 300px; overflow-y: scroll; }
-    button { margin-right: 10px; }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    #log {
+      white-space: pre-wrap;
+      background: #f0f0f0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      height: 300px;
+      overflow-y: scroll;
+      width: 100%;
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body>
@@ -68,6 +82,7 @@
           );
           out('Timestamps:\n' + dateTimes.join('\n'));
           document.getElementById('send').disabled = false;
+          sendTimestamps();
         } else {
           out('No timestamps found.');
         }
@@ -76,7 +91,7 @@
     };
     document.getElementById('connect').addEventListener('click', connectToPuck);
 
-    document.getElementById('send').addEventListener('click', () => {
+    const sendTimestamps = () => {
       if (!timestamps || !bleCharacteristic) return;
       const text = timestamps.map(ts =>
         new Date(ts * 1000).toISOString().substring(0, 19).replace('T', ' ')
@@ -103,13 +118,17 @@
         out('Error: ' + error);
         alert(`You might want to clean up manually.\nError:\n${error}`);
       });
-    });
+    };
+    document.getElementById('send').addEventListener('click', sendTimestamps);
 
     // setTimeout(() => connectToPuck(), 1000);
   </script>
   <style>
     button {
-      margin-right: 10px;
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 10px 0;
       font-size: 32px;
       padding: 12px;
     }
