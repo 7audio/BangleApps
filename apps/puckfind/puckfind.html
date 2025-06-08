@@ -31,6 +31,7 @@
     const serviceUuid = '3e440001-f5bb-357d-719d-179272e4d4d9';
     const charUuid    = '3e440002-f5bb-357d-719d-179272e4d4d9';
     let bleDevice, bleCharacteristic, timestamps;
+    let alarmTime = null;
 
     function out(msg) {
       console.log(msg);
@@ -50,6 +51,15 @@
     }
 
     const connectToPuck = () => {
+      alarmTime = prompt("Alarm time?");
+      if (alarmTime === null) {
+        out('Alarm time not provided, skipping.');
+      } else {
+        if (!/^\d{1,2}:\d{2}$/.test(alarmTime)) {
+          alarmTime = null;
+        }
+        out('Alarm time: ' + alarmTime);
+      }
       out('Requesting Puck.js device...');
       navigator.bluetooth.requestDevice({
         filters: [{ namePrefix: 'Puck.js' }],
@@ -95,7 +105,7 @@
       if (!timestamps || !bleCharacteristic) return;
       const text = timestamps.map(ts =>
         new Date(ts * 1000).toISOString().substring(0, 19).replace('T', ' ')
-      ).join('\n');
+      ).join('\n') + (alarmTime ? `\n${new Date().toISOString().split('T')[0]} ${alarmTime} budilnik` : '');
       out('Sending to server...');
       fetch('/puckfind.php?extend_timestamps=1&message=' + btoa(text))
       .then(response => response.text())

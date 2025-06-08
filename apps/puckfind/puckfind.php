@@ -12,7 +12,14 @@ if ($_GET['extend_timestamps'] ?? false) {
     $lines = explode("\n", $text);
     if (isset($lines[0])) $lines[0] .= ' лег';
     if (isset($lines[1])) $lines[1] .= ' закрыл глаза';
-    if (isset($lines[2])) {
+    if (strpos($text, 'budilnik') !== false) {
+        $lines[2] .= ' встал с кровати';
+        $lines[3] = str_replace('budilnik', 'будильник', $lines[3]);
+        $lines[3] = preg_replace_callback('/(\d{1,2}):(\d{2})/', function ($matches) {
+            return str_pad($matches[1], 2, '0', STR_PAD_LEFT) . ':' . $matches[2] . ':00';
+        }, $lines[3]);
+        array_unshift($lines, implode('.', array_reverse(explode('-', mb_substr($lines[2], 0, 10)))));
+    } elseif (isset($lines[2])) {
         $lines[2] .= ' встал с кровати';
         $lines[] = mb_substr($lines[2], 0, 10) . ' будильник';
         array_unshift($lines, implode('.', array_reverse(explode('-', mb_substr($lines[2], 0, 10)))));
