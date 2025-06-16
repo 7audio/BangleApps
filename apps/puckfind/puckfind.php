@@ -18,6 +18,9 @@ if ($_GET['extend_timestamps'] ?? false) {
         $lines[3] = preg_replace_callback('/(\d{1,2}):(\d{2})/', function ($matches) {
             return str_pad($matches[1], 2, '0', STR_PAD_LEFT) . ':' . $matches[2] . ':00';
         }, $lines[3]);
+        if ($lines[2] > $lines[3]) {
+            [$lines[2], $lines[3]] = [$lines[3], $lines[2]];
+        }
         array_unshift($lines, implode('.', array_reverse(explode('-', mb_substr($lines[2], 0, 10)))));
     } elseif (isset($lines[2])) {
         $lines[2] .= ' встал с кровати';
