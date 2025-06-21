@@ -51,14 +51,21 @@
     }
 
     const connectToPuck = () => {
-      alarmTime = prompt("Alarm time?");
+      // Prompt for alarm time, using previously saved value as default
+      const defaultAlarm = localStorage.getItem('alarmTime') || '';
+      alarmTime = prompt("Alarm time?", defaultAlarm);
       if (alarmTime === null) {
         out('Alarm time not provided, skipping.');
       } else {
+        // Validate HH:MM format
         if (!/^\d{1,2}:\d{2}$/.test(alarmTime)) {
+          out('Invalid alarm time format, skipping.');
           alarmTime = null;
+        } else {
+          // Save valid alarm time for next use
+          localStorage.setItem('alarmTime', alarmTime);
+          out('Alarm time: ' + alarmTime);
         }
-        out('Alarm time: ' + alarmTime);
       }
       out('Requesting Puck.js device...');
       navigator.bluetooth.requestDevice({
