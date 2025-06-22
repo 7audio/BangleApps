@@ -38,7 +38,8 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
     'chat_id' => '85762097',
-    'text' => sprintf("```\n%s\n```", $text),
+    'text' => sprintf("<pre>%s</pre>", htmlspecialchars($text)),
+    'parse_mode' => 'HTML',
     'disable_notification' => $disableNotification,
 ]));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
