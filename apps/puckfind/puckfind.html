@@ -21,17 +21,25 @@
       width: 100%;
       box-sizing: border-box;
     }
+    #alarmTime {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 24px;
+      padding: 8px;
+    }
   </style>
 </head>
 <body>
-  <button id="connect">Connect to Puck.js</button>
-  <button id="send" disabled>Send Timestamps</button>
   <pre id="log"></pre>
+  <input type="text" id="alarmTime" placeholder="HH:MM">
+  <button id="connect">Connect to Puck.js</button>
   <script>
     const serviceUuid = '3e440001-f5bb-357d-719d-179272e4d4d9';
     const charUuid    = '3e440002-f5bb-357d-719d-179272e4d4d9';
     let bleDevice, bleCharacteristic, timestamps;
     let alarmTime = null;
+    const defaultAlarm = localStorage.getItem('alarmTime') || '';
+    document.getElementById('alarmTime').value = defaultAlarm;
 
     function out(msg) {
       console.log(msg);
@@ -51,9 +59,7 @@
     }
 
     const connectToPuck = () => {
-      // Prompt for alarm time, using previously saved value as default
-      const defaultAlarm = localStorage.getItem('alarmTime') || '';
-      alarmTime = prompt("Alarm time?", defaultAlarm);
+      alarmTime = document.getElementById('alarmTime').value.trim();
       if (alarmTime === null) {
         out('Alarm time not provided, skipping.');
       } else {
@@ -98,7 +104,6 @@
             new Date(ts * 1000).toISOString().substring(0, 19).replace('T', ' ')
           );
           out('Timestamps:\n' + dateTimes.join('\n'));
-          document.getElementById('send').disabled = false;
           sendTimestamps();
         } else {
           out('No timestamps found.');
@@ -138,7 +143,6 @@
         alert(`You might want to clean up manually.\nError:\n${error}`);
       });
     };
-    document.getElementById('send').addEventListener('click', sendTimestamps);
 
     // setTimeout(() => connectToPuck(), 1000);
   </script>
