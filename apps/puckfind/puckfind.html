@@ -50,17 +50,6 @@
       return ts;
     }
 
-    function currentTimeString() {
-      const now = new Date();
-      const timestamp = now.getFullYear() + '-' +
-        String(now.getMonth() + 1).padStart(2, '0') + '-' +
-        String(now.getDate()).padStart(2, '0') + ' ' +
-        String(now.getHours()).padStart(2, '0') + ':' +
-        String(now.getMinutes()).padStart(2, '0') + ':' +
-        String(now.getSeconds()).padStart(2, '0');
-      return timestamp;
-    }
-
     const connectToPuck = () => {
       // Prompt for alarm time, using previously saved value as default
       const defaultAlarm = localStorage.getItem('alarmTime') || '';
@@ -130,9 +119,11 @@
       .then(data => {
         out('Server response: ' + data);
         if (data.trim() === 'ok') {
-          out('Writing Hello to Puck.js');
           const encoder = new TextEncoder();
-          return bleCharacteristic.writeValue(encoder.encode(currentTimeString()));
+          const now = new Date();
+          const currentTimeString = parseInt(Date.now()).toString();
+          out(`Writing ${currentTimeString} to Puck.js`);
+          return bleCharacteristic.writeValue(encoder.encode(currentTimeString));
         } else {
           throw new Error('Server returned ' + data);
         }
