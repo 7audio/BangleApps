@@ -32,6 +32,10 @@
 <body>
   <pre id="log"></pre>
   <input type="text" id="alarmTime" placeholder="HH:MM">
+  <div class="button-row">
+    <button id="minus10">-0:10</button>
+    <button id="plus10">+0:10</button>
+  </div>
   <button id="connect">Connect to Puck.js</button>
   <script>
     const serviceUuid = '3e440001-f5bb-357d-719d-179272e4d4d9';
@@ -113,6 +117,27 @@
     };
     document.getElementById('connect').addEventListener('click', connectToPuck);
 
+    function adjustAlarmTime(deltaMinutes) {
+      const input = document.getElementById('alarmTime');
+      let value = input.value.trim();
+      let hours, minutes;
+      if (/^\d{1,2}:\d{2}$/.test(value)) {
+        [hours, minutes] = value.split(':').map(Number);
+      } else {
+        const now = new Date();
+        hours = now.getHours();
+        minutes = now.getMinutes();
+      }
+      let totalMinutes = hours * 60 + minutes + deltaMinutes;
+      totalMinutes = ((totalMinutes % 1440) + 1440) % 1440;
+      hours = Math.floor(totalMinutes / 60);
+      minutes = totalMinutes % 60;
+      input.value = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
+    }
+
+    document.getElementById('minus10').addEventListener('click', () => adjustAlarmTime(-10));
+    document.getElementById('plus10').addEventListener('click', () => adjustAlarmTime(10));
+
     const sendTimestamps = () => {
       if (!timestamps || !bleCharacteristic) return;
       const text = timestamps.map(ts =>
@@ -154,6 +179,14 @@
       margin: 10px 0;
       font-size: 32px;
       padding: 12px;
+    }
+    .button-row {
+      display: flex;
+      gap: 10px;
+    }
+    .button-row button {
+      flex: 1;
+      margin: 10px 0;
     }
   </style>
 </body>
