@@ -23,7 +23,7 @@ if ($_GET['extend_timestamps'] ?? false) {
             $lines[2] .= ' встал с кровати';
             $lines[3] .= ' встал с кровати';
             $lines[4] = str_replace('budilnik', 'будильник', $lines[4]);
-            $lines[4] = formatTimestampInString($lines[3]);
+            $lines[4] = formatTimestampInString($lines[4]);
             if ($lines[3] > $lines[4]) {
                 [$lines[3], $lines[4]] = [$lines[4], $lines[3]];
             }
