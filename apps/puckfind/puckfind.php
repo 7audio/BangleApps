@@ -19,7 +19,15 @@ if ($_GET['extend_timestamps'] ?? false) {
     if (isset($lines[0])) $lines[0] .= ' лег';
     if (isset($lines[1])) $lines[1] .= ($lines[3] ?? false) ? ' закрыл глаза' : ' встал с кровати';
     if (strpos($text, 'budilnik') !== false) {
-        if ($lines[3] ?? false) {
+        if ($lines[4] ?? false) {
+            $lines[2] .= ' встал с кровати';
+            $lines[3] .= ' встал с кровати';
+            $lines[4] = str_replace('budilnik', 'будильник', $lines[4]);
+            $lines[4] = formatTimestampInString($lines[3]);
+            if ($lines[3] > $lines[4]) {
+                [$lines[3], $lines[4]] = [$lines[4], $lines[3]];
+            }
+        } elseif ($lines[3] ?? false) {
             $lines[2] .= ' встал с кровати';
             $lines[3] = str_replace('budilnik', 'будильник', $lines[3]);
             $lines[3] = formatTimestampInString($lines[3]);
