@@ -2,6 +2,36 @@
 
 header('Content-type: application/json; charset=utf-8');
 
+/**
+ * Returns the JSON produced by $build, cached in a temp file for $ttl seconds.
+ * $build returns the JSON string, or false on failure (nothing is cached then,
+ * and the last good cache is served if there is one).
+ */
+function cached(int $ttl, callable $build): string
+{
+    $file = sys_get_temp_dir() . '/bangle-backend.cache.json';
+
+    if (is_file($file) && time() - filemtime($file) < $ttl) {
+        return file_get_contents($file);
+    }
+
+    $json = $build();
+    if ($json === false) {
+        if (is_file($file)) {
+            return file_get_contents($file);
+        }
+        http_response_code(500);
+        return json_encode(['err' => json_last_error_msg()]);
+    }
+
+    // write atomically so concurrent requests never read a half-written file
+    $tmp = tempnam(dirname($file), 'bangle');
+    if ($tmp !== false && file_put_contents($tmp, $json) !== false) {
+        rename($tmp, $file);
+    }
+    return $json;
+}
+
 function fetchAQI()
 {
     $aqiStatuses = "0-50\tGood\n51-100\tModerate\n101-150\tUnhealthy for Sensitive\n151-200\tUnhealthy\n201-300\tVery Unhealthy\n300-999999\tHazardous";
@@ -62,10 +92,12 @@ function fetchPixlDashboard()
     return ['Quit' => $result];
 }
 
-$data = fetchAQI()
-    + fetchTemperature()
-    + fetchWeight()
-    + fetchPixlDashboard()
-    + ['updated' => (new DateTime("now", new DateTimeZone('Europe/Moscow')))->format('H:i:s')];
+echo cached(30 * 60, function () {
+    $data = fetchAQI()
+        + fetchTemperature()
+        + fetchWeight()
+        + fetchPixlDashboard()
+        + ['updated' => (new DateTime("now", new DateTimeZone('Europe/Moscow')))->format('H:i:s')];
 
-echo json_encode($data, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE);
+    return json_encode($data, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE);
+});
