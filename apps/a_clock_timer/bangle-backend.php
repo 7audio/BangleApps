@@ -5,7 +5,14 @@ header('Content-type: application/json; charset=utf-8');
 function fetchAQI()
 {
     $aqiStatuses = "0-50\tGood\n51-100\tModerate\n101-150\tUnhealthy for Sensitive\n151-200\tUnhealthy\n201-300\tVery Unhealthy\n300-999999\tHazardous";
-    $aqiData = json_decode(file_get_contents("https://api.waqi.info/feed/@1861/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3"), true);
+    $aqiLocations = [
+        'Din Daeng' => '@1861',
+        'Kashirskoye shosse' => 'A194614',
+        'Pranangklao' => 'A419596',
+        'SPb Lesnaya' => 'A230920',
+    ];
+    $aqiDataLocation = $aqiLocations['SPb Lesnaya'];
+    $aqiData = json_decode(file_get_contents("https://api.waqi.info/feed/{$aqiDataLocation}/?token=baf1c562ecda746eff772626b2ed246e8a66ffa3"), true);
     $readableStatus = explode("\n", $aqiStatuses)[array_search(true, array_map(function ($statusLine) use ($aqiData) {
         $aqiRange = explode("-", explode("\t", $statusLine)[0]);
         return $aqiData["data"]["aqi"] >= $aqiRange[0] && $aqiData["data"]["aqi"] <= $aqiRange[1];
@@ -17,7 +24,13 @@ function fetchAQI()
 
 function fetchTemperature()
 {
-    $weatherData = json_decode(file_get_contents("https://api.open-meteo.com/v1/forecast?latitude=13.75&longitude=100.50&current_weather=true"), true);
+    $latLngs = [
+        'BKK' => 'latitude=13.75&longitude=100.50',
+        'Moscow' => 'latitude=55.7522&longitude=37.6156',
+        'SPb Lesnaya' => 'latitude=59.9492&longitude=30.3489',
+    ];
+    $weatherDataLocation = $latLngs['SPb Lesnaya'];
+    $weatherData = json_decode(file_get_contents("https://api.open-meteo.com/v1/forecast?{$weatherDataLocation}&current_weather=true"), true);
     return [
         'w' => sprintf(
             "T:%s°C W:%sm/s %s°",
@@ -54,8 +67,8 @@ function fetchPixlDashboard()
 
 $data = fetchAQI()
     + fetchTemperature()
-    // + fetchWeight()
-    + fetchPixlDashboard()
-    + ['updated' => (new DateTime("now", new DateTimeZone('Asia/Bangkok')))->format('H:i:s')];
+    + fetchWeight()
+    // fetchPixlDashboard()
+    + ['updated' => (new DateTime("now", new DateTimeZone('Europe/Moscow')))->format('H:i:s')];
 
 echo json_encode($data, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE);
