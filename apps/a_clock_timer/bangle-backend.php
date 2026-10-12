@@ -53,22 +53,19 @@ function fetchWeight()
 
 function fetchPixlDashboard()
 {
-    $result = file_get_contents('https://legift.ru/pixl-backend.php');
-    $lines = explode("\n", $result);
-    $data = [];
-    foreach ($lines as $i => $line) {
-        $semicolonPos = strpos($line, ':');
-        $key = substr($line, 0, $semicolonPos);
-        $value = substr($line, $semicolonPos + 1);
-        $data[$key] = $value;
-    }
-    return $data;
+    $result = trim(file_get_contents('https://legift.ru/pixl-backend.php'));
+    $result = str_replace([
+        '🌳', '☁️', '🍸',
+    ], [
+        'W', 'T', 'A',
+    ], $result);
+    return ['Quit' => $result];
 }
 
 $data = fetchAQI()
     + fetchTemperature()
     + fetchWeight()
-    // fetchPixlDashboard()
+    + fetchPixlDashboard()
     + ['updated' => (new DateTime("now", new DateTimeZone('Europe/Moscow')))->format('H:i:s')];
 
 echo json_encode($data, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE);
