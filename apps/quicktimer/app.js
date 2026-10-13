@@ -57,7 +57,7 @@ function alert() {
 
 function updateTimer() {
   if (endTime <= Date.now()) {
-    clearInterval(timerInterval);
+    if (timerInterval) clearInterval(timerInterval);
     timerInterval = undefined;
     endTime = 0;
     finished = true;
@@ -69,7 +69,7 @@ function updateTimer() {
 }
 
 function startTimer(minutes) {
-  clearInterval(timerInterval);
+  if (timerInterval) clearInterval(timerInterval);
   clearAlert();
   lastDuration = minutes;
   storage.writeJSON(dataFile, lastDuration);

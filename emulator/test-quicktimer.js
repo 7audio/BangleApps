@@ -24,12 +24,21 @@ if (!fs.existsSync(DIR_IDE)) {
   process.exit(1);
 }
 
-// Override the emulator module paths
+// Override the emulator module paths and add console output capture
 const emuModulePath = path.join(BASE_DIR, 'core', 'lib', 'emulator.js');
 let emuModule = fs.readFileSync(emuModulePath, 'utf8');
 emuModule = emuModule.replace(
   'var DIR_IDE =  BASE_DIR + "/../EspruinoWebIDE";',
   `var DIR_IDE = "${DIR_IDE.replace(/\\/g, '/')}";`
+);
+
+// Hook into console output
+emuModule = emuModule.replace(
+  'function onConsoleOutput(txt) {',
+  `var consoleOutputCallback = null;
+exports.setConsoleCallback = function(cb) { consoleOutputCallback = cb; };
+function onConsoleOutput(txt) {
+  if (consoleOutputCallback) consoleOutputCallback(txt);`
 );
 
 // Create a temporary modified emulator module
@@ -46,6 +55,9 @@ const DEVICEID = "BANGLEJS2";
 apploader.init({
   DEVICEID: DEVICEID
 });
+
+// Capture console output from the emulator
+let consoleLog = '';
 
 async function takeScreenshot(filename) {
   const filepath = path.join(OUTPUT_DIR, filename);
@@ -166,6 +178,19 @@ async function testQuickTimer() {
     console.log(`✓ Screenshots saved to: ${OUTPUT_DIR}`);
     console.log('=================================\n');
     
+    // Check for errors in console log
+    if (consoleLog.includes('Uncaught') || consoleLog.includes('not allowed')) {
+      console.error('\n⚠️  ERRORS DETECTED IN EMULATOR CONSOLE:');
+      console.error('─────────────────────────────────────────');
+      consoleLog.split('\n').forEach(line => {
+        if (line.includes('Uncaught') || line.includes('Error') || line.includes('not allowed')) {
+          console.error(line);
+        }
+      });
+      console.error('─────────────────────────────────────────\n');
+      process.exit(1);
+    }
+    
   } catch (err) {
     console.error('\n=================================');
     console.error('✗ Test failed:', err);
@@ -181,6 +206,16 @@ emu.init({
   DEVICEID: DEVICEID
 }).then(async () => {
   console.log('✓ Emulator ready!\n');
+  
+  // Set up console output capture
+  emu.setConsoleCallback((txt) => {
+    consoleLog += txt + '\n';
+    console.log('[Emulator Console]', txt);
+    if (txt.includes('Uncaught') || txt.includes('Error') || txt.includes('not allowed')) {
+      console.error('⚠️  ERROR DETECTED:', txt);
+    }
+  });
+  
   await testQuickTimer();
   process.exit(0);
 }).catch(err => {
