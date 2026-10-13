@@ -50,9 +50,10 @@ function clearAlert() {
 }
 
 function alert() {
-  Bangle.buzz(150);
-  alertTimeouts.push(setTimeout(() => Bangle.buzz(150), 350));
-  alertTimeouts.push(setTimeout(() => Bangle.buzz(450), 700));
+  Bangle.buzz(825);
+  for (let i = 1; i < 5; i++) {
+    alertTimeouts.push(setTimeout(() => Bangle.buzz(825), i * 1000));
+  }
 }
 
 function updateTimer() {

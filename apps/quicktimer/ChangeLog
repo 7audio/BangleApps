@@ -2,3 +2,4 @@
 0.02: Updated touch handling to use Bangle.setUI() touch callback
 0.03: Fix button tap handling by properly accounting for widget bar offset. Use Bangle.appRect instead of g.getWidth()/g.getHeight() for layout calculations. Touch coordinates are now correctly mapped to button positions
 0.04: Fix crash on first button tap - guard clearInterval() calls to check if timerInterval is defined. Root cause: clearInterval(undefined) throws "not allowed" error on firmware 2v2x
+0.05: Buzz five times for 825 ms with 175 ms pauses when the timer finishes
