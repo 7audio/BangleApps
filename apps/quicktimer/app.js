@@ -98,6 +98,5 @@ function onTouch(_button, point) {
   startTimer(row * 2 + column + 1);
 }
 
-Bangle.setUI({mode: "custom", back: () => Bangle.showLauncher()});
-Bangle.on("touch", onTouch);
+Bangle.setUI({mode: "custom", back: () => Bangle.showLauncher(), touch: onTouch});
 draw();
