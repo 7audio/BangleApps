@@ -1,17 +1,11 @@
-.htaccess
-node_modules
-.DS_Store
-*.js.bak
-appdates.csv
-.vscode
-.idea/
-_config.yml
-tests/Layout/bin/tmp.*
-tests/Layout/testresult.bmp
+apps/local.json
 apps.local.json
-_site
-.jekyll-cache
-.owncloudsync.log
-Desktop.ini
-.sync_*.db*
-*.swp
+.eslintrc.json
+.eslintcache
+node_modules/
+package-lock.json
+
+# Emulator artifacts
+emulator/EspruinoWebIDE/
+emulator/screenshots/
+emulator/*-temp.js
