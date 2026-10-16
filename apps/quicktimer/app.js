@@ -1,7 +1,7 @@
 const storage = require("Storage");
 const dataFile = "quicktimer.json";
 let lastDuration = storage.readJSON(dataFile, 1);
-const pages = [[1, 2, 3, 4], [5, 10, 20, 30]];
+const pages = [[1, 2, 3, 4], [5, 10, 21, 30]];
 if (!pages[0].concat(pages[1]).includes(lastDuration)) lastDuration = 0;
 let page = 0;
 let cancelTimeout;
