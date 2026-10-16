@@ -1,7 +1,7 @@
 {
   "id": "quicktimer",
   "name": "Quick Timer",
-  "version": "0.05",
+  "version": "0.06",
   "description": "A quick timer with four preset durations",
   "icon": "icon.png",
   "tags": "timer,tool",

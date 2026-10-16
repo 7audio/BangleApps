@@ -1,7 +1,10 @@
 const storage = require("Storage");
 const dataFile = "quicktimer.json";
 let lastDuration = storage.readJSON(dataFile, 1);
-if (![1, 2, 3, 4].includes(lastDuration)) lastDuration = 0;
+const pages = [[1, 2, 3, 4], [5, 10, 20, 30]];
+if (!pages[0].concat(pages[1]).includes(lastDuration)) lastDuration = 0;
+let page = 0;
+let cancelTimeout;
 
 let endTime = 0;
 let finished = false;
@@ -31,8 +34,10 @@ function draw() {
     g.setFont("Vector", 40);
     g.drawString(`${minutes}:${seconds < 10 ? "0" : ""}${seconds}`, R.x + width / 2, R.y + height * 0.33);
   } else {
-    g.setFont("6x8", 2);
-    g.drawString(finished ? "Time's up!" : "Choose duration", R.x + width / 2, R.y + height * 0.33);
+    if (finished) {
+      g.setFont("6x8", 2);
+      g.drawString("Time's up!", R.x + width / 2, R.y + height * 0.33);
+    }
   }
 
   g.setFont("6x8", 2);
@@ -40,7 +45,7 @@ function draw() {
     const x = R.x + margin + (i % 2) * (buttonWidth + gap);
     const y = R.y + buttonTop + Math.floor(i / 2) * (buttonHeight + gap);
     g.drawRect(x, y, x + buttonWidth, y + buttonHeight);
-    g.drawString(`${i + 1} min`, x + buttonWidth / 2, y + buttonHeight / 2);
+    g.drawString(`${pages[page][i]} m`, x + buttonWidth / 2, y + buttonHeight / 2);
   }
 }
 
@@ -80,6 +85,33 @@ function startTimer(minutes) {
   timerInterval = setInterval(updateTimer, 250);
 }
 
+function cancelTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = undefined;
+  clearAlert();
+  endTime = 0;
+  finished = false;
+  Bangle.buzz(100);
+  draw();
+}
+
+function onDrag(e) {
+  const R = Bangle.appRect;
+  if (e.b && !cancelTimeout) {
+    if (endTime && e.y < R.y + Math.floor(R.h * 0.48)) {
+      cancelTimeout = setTimeout(() => { cancelTimeout = undefined; cancelTimer(); }, 1500);
+    }
+  } else if (!e.b && cancelTimeout) {
+    clearTimeout(cancelTimeout);
+    cancelTimeout = undefined;
+  }
+}
+
+function onButton() {
+  page = (page + 1) % pages.length;
+  draw();
+}
+
 function onTouch(_button, point) {
   const R = Bangle.appRect;
   const width = R.w;
@@ -98,10 +130,10 @@ function onTouch(_button, point) {
   const x = R.x + margin + column * (buttonWidth + gap);
   const y = R.y + buttonTop + row * (buttonHeight + gap);
   if (point.x > x + buttonWidth || point.y > y + buttonHeight) return;
-  startTimer(row * 2 + column + 1);
+  startTimer(pages[page][row * 2 + column]);
 }
 
 Bangle.loadWidgets();
 Bangle.drawWidgets();
-Bangle.setUI({mode: "custom", back: () => Bangle.showLauncher(), touch: onTouch});
+Bangle.setUI({mode: "custom", touch: onTouch, drag: onDrag, btn: onButton});
 draw();
