@@ -4,4 +4,4 @@
 0.04: Fix crash on first button tap - guard clearInterval() calls to check if timerInterval is defined. Root cause: clearInterval(undefined) throws "not allowed" error on firmware 2v2x
 0.05: Buzz five times for 825 ms with 175 ms pauses when the timer finishes
 0.06: Long press countdown to cancel timer, hardware button cycles duration pages (1-4 / 5-10-21-30 min), shorter "N m" labels, removed "Choose duration" text
-0.07: Add third page (hardware button) showing history of last run timers, most recent last
+0.07: Add third page (hardware button) showing history of last completed timers, most recent last (cancelled timers are not recorded)

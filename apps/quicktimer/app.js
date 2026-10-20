@@ -76,6 +76,10 @@ function updateTimer() {
     timerInterval = undefined;
     endTime = 0;
     finished = true;
+    // only timers that ran to completion go into the history
+    history.push(lastDuration);
+    if (history.length > maxHistory) history.shift();
+    storage.writeJSON(dataFile, history);
     draw();
     alert();
     return;
@@ -87,9 +91,6 @@ function startTimer(minutes) {
   if (timerInterval) clearInterval(timerInterval);
   clearAlert();
   lastDuration = minutes;
-  history.push(minutes);
-  if (history.length > maxHistory) history.shift();
-  storage.writeJSON(dataFile, history);
   endTime = Date.now() + minutes * 60000;
   finished = false;
   draw();
