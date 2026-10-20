@@ -1,8 +1,12 @@
 const storage = require("Storage");
 const dataFile = "quicktimer.json";
-let lastDuration = storage.readJSON(dataFile, 1);
-const pages = [[1, 2, 3, 4], [5, 10, 21, 30]];
-if (!pages[0].concat(pages[1]).includes(lastDuration)) lastDuration = 0;
+const maxHistory = 30;
+let history = storage.readJSON(dataFile, 1);
+if (typeof history === "number") history = [history];
+if (!Array.isArray(history)) history = [];
+let lastDuration = history.length ? history[history.length - 1] : 0;
+// last page (null) shows the history of run timers instead of buttons
+const pages = [[1, 2, 3, 4], [5, 10, 21, 30], null];
 let page = 0;
 let cancelTimeout;
 
@@ -41,6 +45,11 @@ function draw() {
   }
 
   g.setFont("6x8", 2);
+  if (!pages[page]) {
+    g.setFontAlign(-1, -1);
+    g.drawString(g.wrapString(history.join(",") || "No history", width - margin * 2).join("\n"), R.x + margin, R.y + buttonTop);
+    return;
+  }
   for (let i = 0; i < 4; i++) {
     const x = R.x + margin + (i % 2) * (buttonWidth + gap);
     const y = R.y + buttonTop + Math.floor(i / 2) * (buttonHeight + gap);
@@ -67,6 +76,10 @@ function updateTimer() {
     timerInterval = undefined;
     endTime = 0;
     finished = true;
+    // only timers that ran to completion go into the history
+    history.push(lastDuration);
+    if (history.length > maxHistory) history.shift();
+    storage.writeJSON(dataFile, history);
     draw();
     alert();
     return;
@@ -78,7 +91,6 @@ function startTimer(minutes) {
   if (timerInterval) clearInterval(timerInterval);
   clearAlert();
   lastDuration = minutes;
-  storage.writeJSON(dataFile, lastDuration);
   endTime = Date.now() + minutes * 60000;
   finished = false;
   draw();
@@ -122,7 +134,7 @@ function onTouch(_button, point) {
   const buttonWidth = Math.floor((width - margin * 2 - gap) / 2);
   const buttonHeight = Math.floor((height - buttonTop - margin - gap) / 2);
 
-  if (point.y < R.y + buttonTop) return;
+  if (!pages[page] || point.y < R.y + buttonTop) return;
   const column = Math.floor((point.x - R.x - margin) / (buttonWidth + gap));
   const row = Math.floor((point.y - R.y - buttonTop) / (buttonHeight + gap));
   if (column < 0 || column > 1 || row < 0 || row > 1) return;
