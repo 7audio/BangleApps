@@ -1,0 +1,15 @@
+{
+  "id": "quicktimer",
+  "name": "Quick Timer",
+  "version": "0.08",
+  "description": "A quick timer with four preset durations and a history of run timers",
+  "icon": "icon.png",
+  "tags": "timer,tool",
+  "supports": ["BANGLEJS2"],
+  "readme": "README.md",
+  "storage": [
+    {"name":"quicktimer.app.js","url":"app.js"},
+    {"name":"quicktimer.img","url":"app-icon.js","evaluate":true}
+  ],
+  "data": [{"name":"quicktimer.json"}]
+}
