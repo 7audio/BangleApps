@@ -50,6 +50,19 @@ function showMainMenu() {
   E.showMenu(mainMenu);
 }
 
+function sendNote(note) {
+  if (!Bangle.http) {
+    E.showAlert("Requires Gadgetbridge").then(() => showMainMenu());
+    return;
+  }
+  E.showMessage("Sending...");
+  Bangle.http("https://legift.ru/puckfind.php?message="+encodeURIComponent(btoa(note)), {timeout:10000}).then(() => {
+    return E.showAlert("Note sent");
+  }, () => {
+    return E.showAlert("Send failed");
+  }).then(() => showMainMenu());
+}
+
 function showEditMenu(idx) {
   var moveNote = notes[idx].note;
   var editMenu = {
@@ -66,6 +79,9 @@ function showEditMenu(idx) {
       notes.splice(idx,1);
       require("Storage").write("noteify.json",JSON.stringify(notes));
       showMainMenu();
+    },
+    "Send to server" : function() {
+      sendNote(moveNote);
     },
     "Set as alarm" : function() {
       //limit alarm msg to 30 chars
