@@ -208,7 +208,7 @@ exports.buzz = function(msgSrc) {
   if (msgSrc && msgSrc.toLowerCase()==="phone") {
     // special vibration pattern for incoming calls
     pattern = msgSettings.vibrateCalls;
-    repeat = msgSettings.repeatCalls;
+    repeat = msgSettings.repeatCalls===undefined ? 4 : msgSettings.repeatCalls;
   } else {
     pattern = msgSettings.vibrate;
     repeat = msgSettings.repeat;
@@ -216,7 +216,7 @@ exports.buzz = function(msgSrc) {
   if (pattern===undefined) { pattern = ":"; } // pattern may be "", so we can't use || ":" here
   if (!pattern) return Promise.resolve();
 
-  if (repeat===undefined) repeat = 4; // repeat may be zero
+  if (repeat===undefined) repeat = 0; // repeat may be zero
   if (repeat)
   {
     exports.buzzInterval = setInterval(() => require("buzz").pattern(pattern), repeat*1000);

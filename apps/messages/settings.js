@@ -5,8 +5,8 @@
     let settings = require('Storage').readJSON("messages.settings.json", true) || {};
     if (settings.vibrate===undefined) settings.vibrate=":";
     if (settings.vibrateCalls===undefined) settings.vibrateCalls=":";
-    if (settings.repeat===undefined) settings.repeat=4;
-    if (settings.repeatCalls===undefined) settings.repeatCalls=settings.repeat;
+    if (settings.repeat===undefined) settings.repeat=0;
+    if (settings.repeatCalls===undefined) settings.repeatCalls=4;
     if (settings.vibrateTimeout===undefined) settings.vibrateTimeout=60;
     if (settings.unreadTimeout===undefined) settings.unreadTimeout=60;
     if (settings.maxMessages===undefined) settings.maxMessages=3;
