@@ -8,7 +8,10 @@
   if (curr) require("qmsched").applyOptions(curr); // no need to re-apply default options
 
   let settings = require('Storage').readJSON('qmsched.json',true)||{};
-  let scheds = settings.scheds||[];
+  let scheds = settings.scheds||[
+    {"hr": 8.5, "mode": 0},
+    {"hr": 23.5, "mode": 2},
+  ];
   if (!scheds.length) {return;}
   const now = new Date(),
     hr = now.getHours()+(now.getMinutes()/60)+(now.getSeconds()/3600); // current (decimal) hour
@@ -17,6 +20,8 @@
     tmor = scheds.filter(s => s.hr<=hr); // scheduled for tomorrow
   const next = tday.length ? tday[0] : tmor[0],
     mode = next.mode;
+  const current = tmor.length ? tmor[tmor.length-1] : scheds[scheds.length-1];
+  if (curr !== current.mode) require("qmsched").setMode(current.mode);
   let t = 3600000*(next.hr-hr); // timeout in milliseconds
   if (t<0) {t += 86400000;} // scheduled for tomorrow: add a day
   /* update quiet mode at the correct time. */

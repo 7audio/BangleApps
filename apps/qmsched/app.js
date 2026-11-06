@@ -59,8 +59,8 @@ function loadSettings() {
     options: {}, // Bangle options to override during quiet mode, default = none
     scheds: [
       // default schedule:
-      {"hr":  8, "mode": 0},
-      {"hr": 22, "mode": 1},
+      {"hr":  8.5, "mode": 0},
+      {"hr": 23.5, "mode": 2},
     ],
   }, settings);
   scheds = settings.scheds; options = settings.options;

@@ -1,6 +1,7 @@
 # Quiet Mode Schedule and Widget
 
 Automatically turn Quiet Mode on or off at set times, and display a widget when Quiet Mode is active.
+By default, it enables Silent mode from 23:30 until 08:30 every day.
 
 |                  Bangle.js 1                  |                  Bangle.js 2                  |
 |:---------------------------------------------:|:---------------------------------------------:|
