@@ -2,6 +2,8 @@
 
 header('Access-Control-Allow-Origin: *');
 
+$tgToken = require_once __DIR__ . '/token.php';
+
 $audio = $_FILES['audio'] ?? null;
 if ($audio !== null && (
     !is_array($audio) ||
@@ -64,18 +66,42 @@ if ($audio === null && ($_GET['extend_timestamps'] ?? false)) {
 
 $ch = curl_init();
 
-$tgToken = '__TG_TOKEN__';
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 if ($audio !== null) {
-    // Telegram's audio player only supports MP3/M4A; preserve 3GP as a document.
-    curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/$tgToken/sendDocument");
+    $audioPath = tempnam(sys_get_temp_dir(), 'puckfind-audio-');
+    if ($audioPath === false) {
+        http_response_code(500);
+        exit('fail1');
+    }
+    register_shutdown_function(function () use ($audioPath) {
+        if (is_file($audioPath)) unlink($audioPath);
+    });
+
+    if (!is_callable('exec')) {
+        error_log('puckfind: PHP exec is unavailable for audio conversion');
+        http_response_code(500);
+        exit('fail2');
+    }
+
+    // Explicitly select MP3 because the temporary output has no file extension.
+    $command = 'ffmpeg -nostdin -hide_banner -loglevel error -y -i ' . escapeshellarg($audio['tmp_name'])
+        . ' -map 0:a:0 -vn -c:a libmp3lame -ac 1 -ar 44100 -b:a 64k -f mp3 '
+        . escapeshellarg($audioPath) . ' 2>&1';
+    exec($command, $conversionOutput, $conversionStatus);
+    if ($conversionStatus !== 0 || filesize($audioPath) === 0) {
+        error_log('puckfind: audio conversion failed: ' . implode("\n", $conversionOutput));
+        http_response_code(500);
+        exit('fail3');
+    }
+
+    curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/$tgToken/sendAudio");
     curl_setopt($ch, CURLOPT_POSTFIELDS, [
         'chat_id' => '85762097',
-        'document' => new CURLFile(
-            $audio['tmp_name'],
-            mime_content_type($audio['tmp_name']) ?: 'application/octet-stream',
-            basename($audio['name'])
+        'audio' => new CURLFile(
+            $audioPath,
+            'audio/mpeg',
+            pathinfo(basename($audio['name']), PATHINFO_FILENAME) . '.mp3'
         ),
         'disable_notification' => $disableNotification ? 'true' : 'false',
     ]);
