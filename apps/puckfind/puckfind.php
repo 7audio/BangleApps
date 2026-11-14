@@ -85,8 +85,9 @@ if ($audio !== null) {
     }
 
     // Explicitly select MP3 because the temporary output has no file extension.
+    // Boost the audio by 6 dB (approximately twice the amplitude).
     $command = 'ffmpeg -nostdin -hide_banner -loglevel error -y -i ' . escapeshellarg($audio['tmp_name'])
-        . ' -map 0:a:0 -vn -c:a libmp3lame -ac 1 -ar 44100 -b:a 64k -f mp3 '
+        . ' -map 0:a:0 -vn -af volume=6dB -c:a libmp3lame -ac 1 -ar 44100 -b:a 64k -f mp3 '
         . escapeshellarg($audioPath) . ' 2>&1';
     exec($command, $conversionOutput, $conversionStatus);
     if ($conversionStatus !== 0 || filesize($audioPath) === 0) {
