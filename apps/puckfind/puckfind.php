@@ -2,7 +2,7 @@
 
 header('Access-Control-Allow-Origin: *');
 
-$tgToken = require_once __DIR__ . '/token.php';
+$tgToken = '__TG_TOKEN__';
 
 $audio = $_FILES['audio'] ?? null;
 if ($audio !== null && (
