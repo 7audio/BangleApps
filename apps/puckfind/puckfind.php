@@ -2,11 +2,23 @@
 
 header('Access-Control-Allow-Origin: *');
 
+$audio = $_FILES['audio'] ?? null;
+if ($audio !== null && (
+    !is_array($audio) ||
+    ($audio['error'] ?? null) !== UPLOAD_ERR_OK ||
+    !is_string($audio['tmp_name'] ?? null) ||
+    !is_string($audio['name'] ?? null) ||
+    !is_uploaded_file($audio['tmp_name'])
+)) {
+    http_response_code(400);
+    exit('fail');
+}
+
 $text = $_GET['message'] ?? $argv[1] ?? 'Hello';
 
 $text = base64_decode($text);
 
-$disableNotification = (bool) $_GET['disable_notification'] ?? true;
+$disableNotification = (bool) ($_GET['disable_notification'] ?? true);
 
 function formatTimestampInString(string $input) {
     return preg_replace_callback('/(\d{1,2}):(\d{2})/', function ($matches) {
@@ -14,7 +26,7 @@ function formatTimestampInString(string $input) {
     }, $input);
 }
 
-if ($_GET['extend_timestamps'] ?? false) {
+if ($audio === null && ($_GET['extend_timestamps'] ?? false)) {
     $lines = explode("\n", $text);
     if (isset($lines[0])) $lines[0] .= ' лег';
     if (isset($lines[1])) $lines[1] .= ($lines[3] ?? false) ? ' закрыл глаза' : ' встал с кровати';
@@ -53,22 +65,36 @@ if ($_GET['extend_timestamps'] ?? false) {
 $ch = curl_init();
 
 $tgToken = '__TG_TOKEN__';
-curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/$tgToken/sendMessage");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-    'chat_id' => '85762097',
-    'text' => sprintf("<pre>%s</pre>", htmlspecialchars($text)),
-    'parse_mode' => 'HTML',
-    'disable_notification' => $disableNotification,
-]));
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json'
-]);
+if ($audio !== null) {
+    // Telegram's audio player only supports MP3/M4A; preserve 3GP as a document.
+    curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/$tgToken/sendDocument");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, [
+        'chat_id' => '85762097',
+        'document' => new CURLFile(
+            $audio['tmp_name'],
+            mime_content_type($audio['tmp_name']) ?: 'application/octet-stream',
+            basename($audio['name'])
+        ),
+        'disable_notification' => $disableNotification ? 'true' : 'false',
+    ]);
+} else {
+    curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/$tgToken/sendMessage");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'chat_id' => '85762097',
+        'text' => sprintf("<pre>%s</pre>", htmlspecialchars($text)),
+        'parse_mode' => 'HTML',
+        'disable_notification' => $disableNotification,
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json'
+    ]);
+}
 
 $result = curl_exec($ch);
 
 curl_close($ch);
 
-$isSuccess = strpos($result, '"ok":true') !== false;
+$isSuccess = $result !== false && strpos($result, '"ok":true') !== false;
 echo $isSuccess ? 'ok' : 'fail';
