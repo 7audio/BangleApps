@@ -49,6 +49,7 @@ function draw() {
   g.setFont('Vector', 14).setFontAlign(0, 0);
   var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][date.getDay()];
   g.drawString(locale.date(new Date(),1).split('/').reverse().join('-') + ', ' + dayOfWeek, 88, 68);
+  g.setFont('Vector', 11);
   g.drawString(offsets[0][0]+" "+locale.time(getTimeFromTimezone(offsets[0][1]),1), 88, 80);
   g.drawString(offsets[1][0]+" "+locale.time(getTimeFromTimezone(offsets[1][1]),1), 88, 88);
 
