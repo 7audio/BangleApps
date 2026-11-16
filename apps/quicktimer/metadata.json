@@ -1,7 +1,7 @@
 {
   "id": "quicktimer",
   "name": "Quick Timer",
-  "version": "0.10",
+  "version": "0.11",
   "description": "A quick timer with preset durations and a history of run timers",
   "icon": "icon.png",
   "tags": "timer,tool",
