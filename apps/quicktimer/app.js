@@ -36,7 +36,15 @@ function draw() {
     const minutes = Math.floor(remaining / 60);
     const seconds = remaining % 60;
     g.setFont("Vector", 40);
-    g.drawString(`${minutes}:${seconds < 10 ? "0" : ""}${seconds}`, R.x + width / 2, R.y + height * 0.33);
+    const timerText = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    const timerX = R.x + width / 2;
+    const timerY = R.y + height * 0.33;
+    const timerWidth = g.stringWidth(timerText);
+    g.drawString(timerText, timerX, timerY);
+    g.setFont("6x8");
+    g.setFontAlign(-1, 0);
+    g.drawString(`/${lastDuration}`, timerX + timerWidth / 2 + 2, timerY);
+    g.setFontAlign(0, 0);
   } else {
     if (finished) {
       g.setFont("6x8", 2);
