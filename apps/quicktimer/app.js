@@ -6,12 +6,13 @@ if (typeof history === "number") history = [history];
 if (!Array.isArray(history)) history = [];
 let lastDuration = history.length ? history[history.length - 1] : 0;
 // last page (null) shows the history of run timers instead of buttons
-const pages = [[1, 2, 3, 4], [5, 10, 21, 30], null];
+const pages = [[1, 2, 3, "nxt"], [5, 10, 21, 30], null];
 let page = 0;
 let cancelTimeout;
 
 let endTime = 0;
 let finished = false;
+let runningHistoryEntry;
 let timerInterval;
 let alertTimeouts = [];
 
@@ -62,7 +63,8 @@ function draw() {
     const x = R.x + margin + (i % 2) * (buttonWidth + gap);
     const y = R.y + buttonTop + Math.floor(i / 2) * (buttonHeight + gap);
     g.drawRect(x, y, x + buttonWidth, y + buttonHeight);
-    g.drawString(`${pages[page][i]} m`, x + buttonWidth / 2, y + buttonHeight / 2);
+    const duration = pages[page][i];
+    g.drawString(duration === "nxt" ? duration : `${duration} m`, x + buttonWidth / 2, y + buttonHeight / 2);
   }
 }
 
@@ -85,7 +87,7 @@ function updateTimer() {
     endTime = 0;
     finished = true;
     // only timers that ran to completion go into the history
-    history.push(lastDuration);
+    history.push(runningHistoryEntry);
     if (history.length > maxHistory) history.shift();
     storage.writeJSON(dataFile, history);
     draw();
@@ -95,10 +97,11 @@ function updateTimer() {
   draw();
 }
 
-function startTimer(minutes) {
+function startTimer(minutes, historyEntry = minutes) {
   if (timerInterval) clearInterval(timerInterval);
   clearAlert();
   lastDuration = minutes;
+  runningHistoryEntry = historyEntry;
   endTime = Date.now() + minutes * 60000;
   finished = false;
   draw();
@@ -150,7 +153,9 @@ function onTouch(_button, point) {
   const x = R.x + margin + column * (buttonWidth + gap);
   const y = R.y + buttonTop + row * (buttonHeight + gap);
   if (point.x > x + buttonWidth || point.y > y + buttonHeight) return;
-  startTimer(pages[page][row * 2 + column]);
+  const duration = pages[page][row * 2 + column];
+  if (duration === "nxt") startTimer(2, "|");
+  else startTimer(duration);
 }
 
 Bangle.loadWidgets();

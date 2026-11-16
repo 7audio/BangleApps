@@ -1,8 +1,8 @@
 {
   "id": "quicktimer",
   "name": "Quick Timer",
-  "version": "0.09",
-  "description": "A quick timer with four preset durations and a history of run timers",
+  "version": "0.10",
+  "description": "A quick timer with preset durations and a history of run timers",
   "icon": "icon.png",
   "tags": "timer,tool",
   "supports": ["BANGLEJS2"],
