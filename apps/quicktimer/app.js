@@ -97,11 +97,11 @@ function updateTimer() {
   draw();
 }
 
-function startTimer(minutes, historyEntry = minutes) {
+function startTimer(minutes, historyEntry) {
   if (timerInterval) clearInterval(timerInterval);
   clearAlert();
   lastDuration = minutes;
-  runningHistoryEntry = historyEntry;
+  runningHistoryEntry = historyEntry === undefined ? minutes : historyEntry;
   endTime = Date.now() + minutes * 60000;
   finished = false;
   draw();

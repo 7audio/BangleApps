@@ -8,3 +8,4 @@
 0.08: Only timers that ran to completion are added to the history; cancelled timers are not recorded
 0.09: Show the selected timer duration next to the countdown
 0.10: Replace the 4-minute button with a 2-minute "nxt" shortcut, shown as "|" in timer history
+0.11: Fix startup compatibility with older watch interpreters
