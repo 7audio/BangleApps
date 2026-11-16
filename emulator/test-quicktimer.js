@@ -143,7 +143,7 @@ async function testQuickTimer() {
       { id: '1min', x: margin + buttonWidth / 2, y: buttonTop + buttonHeight / 2, row: 0, col: 0 },
       { id: '2min', x: margin + buttonWidth + gap + buttonWidth / 2, y: buttonTop + buttonHeight / 2, row: 0, col: 1 },
       { id: '3min', x: margin + buttonWidth / 2, y: buttonTop + buttonHeight + gap + buttonHeight / 2, row: 1, col: 0 },
-      { id: '4min', x: margin + buttonWidth + gap + buttonWidth / 2, y: buttonTop + buttonHeight + gap + buttonHeight / 2, row: 1, col: 1 }
+      { id: 'nxt', x: margin + buttonWidth + gap + buttonWidth / 2, y: buttonTop + buttonHeight + gap + buttonHeight / 2, row: 1, col: 1 }
     ];
     
     console.log('\nButton layout:');
